@@ -1,22 +1,22 @@
 package scheme
 
 import (
-		"testing"
+	"testing"
 )
 
 func TestConst(t *testing.T) {
-		expectedResultByExpression := map[string]string{
-				"1":		"1",
-				"20":		"20",
-				"1000000":	"1000000",
-		}
+	expectedResultByExpression := map[string]string{
+		"1":       "1",
+		"20":      "20",
+		"1000000": "1000000",
+	}
 
-		for expression, expectedResult := range expectedResultByExpression {
-				actual := NewConst(expression).String()
+	for expression, expectedResult := range expectedResultByExpression {
+		actual := NewConst(expression).String()
 
-				if expectedResult != actual (
-						t.Errorf("Expected: %v, Got: %v", expectedResult, actual)
-						return
-				)
+		if expectedResult != actual {
+			t.Errorf("Expected: %v, Got: %v", expectedResult, actual)
+			return
 		}
+	}
 }
