@@ -6,9 +6,9 @@ import (
 
 func TestExpression(t *testing.T) {
 	expectedResultByExpression := map[string]string{
-		"1":		"1",
-		"20":		"20",
-		"1000000":	"1000000",	
+		"1":   "1",
+		"20":  "20",
+		"300": "300",
 	}
 
 	for expression, expectResult := range expectedResultByExpression {
