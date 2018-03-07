@@ -1,11 +1,15 @@
 package scheme
 
+import "strings"
+
 type Interpreter struct {
 	Parser
 }
 
-func NewInterpreter(expression string) *Interpreter {
-	return &Interpreter{}
+func NewInterpreter(source string) *Interpreter {
+	interpreter := new(Interpreter)
+	interpreter.Init(strings.NewReader(source))
+	return interpreter
 }
 
 func (i *Interpreter) IndentLevel() int {
@@ -13,4 +17,5 @@ func (i *Interpreter) IndentLevel() int {
 }
 
 func (i *Interpreter) Eval() {
+	i.Parse()
 }
