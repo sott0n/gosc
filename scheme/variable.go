@@ -5,11 +5,13 @@
 
 package scheme
 
+// Variable is a struction for scheme variable object.
 type Variable struct {
 	ObjectBase
 	identifier string
 }
 
+// NewVariable is a function for scheme variable object.
 func NewVariable(identifier string) *Variable {
 	return &Variable{identifier: identifier}
 }

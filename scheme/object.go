@@ -4,11 +4,13 @@
 
 package scheme
 
+// Object is an abstruct class for scheme object.
 type Object interface {
 	String() string
 	IsProcedure() bool
 }
 
+// ObjectBase is an abstruct class for base scheme object.
 type ObjectBase struct {
 }
 
@@ -16,6 +18,7 @@ func (o *ObjectBase) String() string {
 	return "This type's String() is not implemented yet."
 }
 
+// IsProcedure is boolean function whether it procedure or not.
 func (o *ObjectBase) IsProcedure() bool {
 	return false
 }

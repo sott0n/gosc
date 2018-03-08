@@ -7,10 +7,12 @@
 
 package scheme
 
+// Procedure is a struction for scheme procedure.
 type Procedure struct {
 	ObjectBase
 }
 
+// NewProcedure is a function for definition a new procedure.
 func NewProcedure(func(Object) Object) *Procedure {
 	return &Procedure{}
 }

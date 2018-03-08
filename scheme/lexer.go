@@ -13,10 +13,12 @@ import (
 	"text/scanner"
 )
 
+// Lexer is a struction for lexical analyzer.
 type Lexer struct {
 	scanner.Scanner
 }
 
+// NextToken is a struction for definition a next token.
 func (l *Lexer) NextToken() Object {
 	text := ""
 	switch l.Scan() {

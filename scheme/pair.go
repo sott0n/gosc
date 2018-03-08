@@ -7,16 +7,17 @@
 
 package scheme
 
+// Pair is a struction for car and cdr.
 type Pair struct {
 	ObjectBase
 	Car Object
 	Cdr *Pair
 }
 
+// String is a string function with accessing Pair.
 func (p *Pair) String() string {
 	if p.Car == nil && p.Cdr == nil {
 		return "()"
-	} else {
-		return "Not implemented."
 	}
+	return "Not implemented."
 }

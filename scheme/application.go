@@ -6,10 +6,12 @@ package scheme
 
 import "log"
 
+// Application is a struction for application.
 type Application struct {
 	ObjectBase
 	procedureVariable Object
 	arguments         Object // expect *Pair
+	environment       Environment
 }
 
 func (a *Application) String() string {

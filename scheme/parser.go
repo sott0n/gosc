@@ -10,16 +10,19 @@ import (
 	"text/scanner"
 )
 
+// Parser is a struction for analyze scheme source's syntax.
 type Parser struct {
 	*Lexer
 }
 
+// NewParser is a function for definition a new Parser.
 func NewParser(source string) *Parser {
 	parser := &Parser{&Lexer{}}
 	parser.Init(strings.NewReader(source))
 	return parser
 }
 
+// Parse is a function to deal parser.
 func (p Parser) Parse() Object {
 	switch p.Peek() {
 	case ')':

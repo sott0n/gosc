@@ -8,11 +8,13 @@ import (
 	"strconv"
 )
 
+// Number is a struction for using number type.
 type Number struct {
 	ObjectBase
 	number int
 }
 
+// NewNumber is a struction for definition a new number.
 func NewNumber(numberText string) *Number {
 	number, err := strconv.Atoi(numberText)
 	if err != nil {

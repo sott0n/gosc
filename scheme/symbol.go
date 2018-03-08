@@ -3,11 +3,13 @@
 
 package scheme
 
+// Symbol is a struction for scheme symbol object.
 type Symbol struct {
 	ObjectBase
 	identifier string
 }
 
+// NewSymbol is a function for difinition Symbol object.
 func NewSymbol(identifier string) *Symbol {
 	return &Symbol{identifier: identifier}
 }
