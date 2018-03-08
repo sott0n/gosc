@@ -1,14 +1,16 @@
 package scheme
 
-import "strings"
+import (
+	"fmt"
+	"text/scanner"
+)
 
 type Interpreter struct {
-	Parser
+	*Parser
 }
 
 func NewInterpreter(source string) *Interpreter {
-	interpreter := new(Interpreter)
-	interpreter.Init(strings.NewReader(source))
+	interpreter := &Interpreter{NewParser(source)}
 	return interpreter
 }
 
@@ -17,5 +19,12 @@ func (i *Interpreter) IndentLevel() int {
 }
 
 func (i *Interpreter) Eval() {
-	i.Parse()
+	for i.Peek() != scanner.EOF {
+		expression := i.Parser.Parse()
+
+		if expression != nil {
+			return
+		}
+		fmt.Println(expression.String())
+	}
 }

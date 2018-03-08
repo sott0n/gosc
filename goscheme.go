@@ -29,8 +29,8 @@ func repl() {
 				log.Fatal(err)
 				return
 			}
-			if len(currentLine) == 0 {
-				continue
+			if currentLine == "exit" {
+				return
 			}
 			expression += currentLine
 
