@@ -1,25 +1,11 @@
+// Number is a scheme number object, which is expressed by number literal.
+
 package scheme
 
-import "strconv"
-
-type Number SchemeType
-
-func NewNumber(expression interface{}) *Number {
-	switch expression.(type) {
-	case string:
-		return &Number{expression: expression.(string)}
-	case int:
-		value := strconv.Itoa(expression.(int))
-		return &Number{expression: value}
-	default:
-		panic("Caught unexpected flow")
-	}
+type Number struct {
+	number int
 }
 
-func (n *Number) String() string {
-	return n.expression
-}
-
-func (n *Number) IsNumber() bool {
-	return true
+func NewNumber(number int) *Number {
+	return &Number{number: number}
 }
