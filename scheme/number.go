@@ -11,18 +11,29 @@ import (
 // Number is a struction for using number type.
 type Number struct {
 	ObjectBase
-	number int
+	value int
 }
 
 // NewNumber is a struction for definition a new number.
-func NewNumber(numberText string) *Number {
-	number, err := strconv.Atoi(numberText)
-	if err != nil {
-		log.Fatal(fmt.Sprintf("String conversion %s to integer failed.", numberText))
+func NewNumber(argument interface{}) *Number {
+	var value int
+	var err error
+
+	switch argument.(type) {
+	case int:
+		value = argument.(int)
+	case string:
+		value, err = strconv.Atoi(argument.(string))
+		if err != nil {
+			log.Fatal(fmt.Sprintf("String conversion %s to integer failed.", argument.(string)))
+		}
+	default:
+		log.Fatal("Unexpected argument type for NewNumber()")
 	}
-	return &Number{number: number}
+
+	return &Number{value: value}
 }
 
 func (n *Number) String() string {
-	return strconv.Itoa(n.number)
+	return strconv.Itoa(n.value)
 }
