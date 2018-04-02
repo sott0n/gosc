@@ -10,8 +10,9 @@ package scheme
 // Pair is a struction for car and cdr.
 type Pair struct {
 	ObjectBase
-	Car Object
-	Cdr *Pair
+	Car         Object
+	Cdr         *Pair
+	environment *Environment
 }
 
 // String is a string function with accessing Pair.

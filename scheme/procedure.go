@@ -10,6 +10,7 @@ package scheme
 // Procedure is a struction for scheme procedure.
 type Procedure struct {
 	ObjectBase
+	environment *Environment
 }
 
 // NewProcedure is a function for definition a new procedure.

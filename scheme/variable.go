@@ -8,7 +8,8 @@ package scheme
 // Variable is a struction for scheme variable object.
 type Variable struct {
 	ObjectBase
-	identifier string
+	identifier  string
+	environment *Environment
 }
 
 // NewVariable is a function for scheme variable object.

@@ -8,11 +8,21 @@ package scheme
 type Environment struct {
 	ObjectBase
 	parent  *Environment
-	binding *Binding
+	binding Binding
 }
 
 // Binding is a struction for binding.
 type Binding map[string]*Procedure
+
+// TopLevel is a setting environment.
+var TopLevel = Environment{
+	parent:  nil,
+	binding: builtinProcedure,
+}
+
+var builtinProcedure = Binding{
+	"": nil,
+}
 
 func newEnvironment() *Environment {
 	return &Environment{}
