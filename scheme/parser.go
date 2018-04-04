@@ -47,8 +47,24 @@ func (p Parser) Parse() Object {
 		return nil
 	}
 
-	object := p.NextToken()
+	object := p.parseObject()
 	return object
+}
+
+// This function parses a token from current position,
+// and changes the current position to the end of the token.
+func (p *Parser) parseObject() Object {
+	switch p.Scan() {
+	case ')':
+		return nil
+	case scanner.Int:
+		return NewNumber(p.TokenText())
+	case scanner.String, '+':
+		return NewVariable(p.TokenText())
+	default:
+		log.Fatal("Unexpected flow (switched default in scanning)")
+	}
+	return nil
 }
 
 // This function returns only *Pair.
@@ -60,7 +76,6 @@ func (p *Parser) parseListBody() Object {
 		p.Next()
 		return new(Pair)
 	}
-
 	car := p.Parse()
 	if car == nil {
 		log.Print("Unsupported flow (maybe incomplete source or unexpected expression)")

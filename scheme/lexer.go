@@ -9,30 +9,10 @@
 package scheme
 
 import (
-	"fmt"
 	"text/scanner"
 )
 
 // Lexer is a struction for lexical analyzer.
 type Lexer struct {
 	scanner.Scanner
-}
-
-// NextToken is a struction for definition a next token.
-func (l *Lexer) NextToken() Object {
-	text := ""
-	switch l.Scan() {
-	case '(', ')', '\'', scanner.EOF:
-		fmt.Println("Unexpected flow")
-	case scanner.Int:
-		return NewNumber(l.TokenText())
-	case '-':
-		fmt.Println("Unexpected")
-	case scanner.String, '+':
-		return NewVariable(l.TokenText())
-	default:
-		text = l.TokenText()
-	}
-	fmt.Println(text)
-	return nil
 }
