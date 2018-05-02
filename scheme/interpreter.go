@@ -16,8 +16,7 @@ type Interpreter struct {
 
 // NewInterpreter is a struction for definition of new interpreter.
 func NewInterpreter(source string) *Interpreter {
-	interpreter := &Interpreter{NewParser(source)}
-	return interpreter
+	return &Interpreter{NewParser(source)}
 }
 
 // IndentLevel is a struction to save a level of indent.
