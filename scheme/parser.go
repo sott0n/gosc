@@ -6,7 +6,6 @@ package scheme
 
 import (
 	"log"
-	"strings"
 )
 
 // Parser is a struction for analyze scheme source's syntax.
@@ -16,9 +15,7 @@ type Parser struct {
 
 // NewParser is a function for definition a new Parser.
 func NewParser(source string) *Parser {
-	parser := &Parser{&Lexer{}}
-	parser.Init(strings.NewReader(source))
-	return parser
+	return &Parser{NewLexer(source)}
 }
 
 // Parse is a function to deal parser.
