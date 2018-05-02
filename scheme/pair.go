@@ -17,7 +17,7 @@ type Pair struct {
 
 // String is a string function with accessing Pair.
 func (p *Pair) String() string {
-	if p.Car == nil && p.Cdr == nil {
+	if p.IsEmpty() {
 		return "()"
 	}
 	return "Not implemented."
@@ -31,4 +31,9 @@ func (p *Pair) EvaledCar() Object {
 	default:
 		return p.Car
 	}
+}
+
+// IsEmpty is checking empty value.
+func (p *Pair) IsEmpty() bool {
+	return p.Car == nil && p.Cdr == nil
 }
