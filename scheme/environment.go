@@ -32,6 +32,10 @@ func (e *Environment) invokeProcedure(variable, arguments Object) Object {
 	if variable == nil {
 		log.Fatal("Invoke procedure for <nil> variable.")
 	}
-	procedure := TopLevel.binding[variable.(*Variable).identifier]
+	procedure := e.binding[variable.(*Variable).identifier]
 	return procedure.invoke(arguments)
+}
+
+func (e *Environment) scopedBinding() Binding {
+	return Binding{}
 }

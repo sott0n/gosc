@@ -17,6 +17,7 @@ var parserTests = []parserTest{
 	{"(+ 1 2)", "3"},
 	{"(+ 1 20 300 4000)", "4321"},
 	{"( + 1 2 3 )", "6"},
+	{"(+ 1 (+ 2 3) (+ 3 4))", "13"},
 }
 
 func TestParser(t *testing.T) {

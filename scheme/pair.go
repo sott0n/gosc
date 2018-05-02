@@ -22,3 +22,13 @@ func (p *Pair) String() string {
 	}
 	return "Not implemented."
 }
+
+// EvaledCar is applying Car procedure.
+func (p *Pair) EvaledCar() Object {
+	switch p.Car.(type) {
+	case *Application:
+		return p.Car.(*Application).applyProcedure()
+	default:
+		return p.Car
+	}
+}
