@@ -20,6 +20,7 @@ var builtinProcedures = Binding{
 	"+": NewProcedure(plus),
 	"-": NewProcedure(minus),
 	"*": NewProcedure(multiply),
+	"/": NewProcedure(divide),
 }
 
 // NewProcedure is a function for definition a new procedure.
@@ -91,4 +92,31 @@ func multiply(arguments Object) Object {
 		arguments = pair.Cdr
 	}
 	return NewNumber(product)
+}
+
+func divide(arguments Object) Object {
+	switch arguments.(type) {
+	case *Pair:
+		pair := arguments.(*Pair)
+		if pair.IsEmpty() {
+			log.Print("procedure requires at least one argument: (/)")
+			return nil
+		}
+		quotient := pair.EvaledCar().(*Number).value
+		list := pair.Cdr
+		for {
+			if list == nil {
+				break
+			}
+			if car := list.EvaledCar(); car != nil {
+				number := car.(*Number)
+				quotient /= number.value
+			}
+			list = list.Cdr
+		}
+		return NewNumber(quotient)
+	default:
+		log.Print("procedure requires at least one argument: (/)")
+		return nil
+	}
 }
