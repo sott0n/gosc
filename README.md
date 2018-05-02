@@ -10,7 +10,7 @@
 |:-----|:-----|:-----------:|
 | Number | number?, *, /, =, <, <=, >, >= | +, -, *, / |
 | List | null?, pair?, list?, symbol?, car, cdr, cons, list, length, memq, last, append, set-car!, set-cdr! |  |
-| Boolean | boolean?, not |  |
+| Boolean | boolean?, not, #f, #t | #f, #t |
 | String | string?, string-append, symbol->string, string->symbol, string->number, number->string |  |
 | Procedure | procedure? |  |
 | Comparison | eq?, neq?, equal? |  |
