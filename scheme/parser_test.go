@@ -2,7 +2,6 @@ package scheme
 
 import (
 	"testing"
-	"text/scanner"
 )
 
 type parserTest struct {
@@ -12,8 +11,9 @@ type parserTest struct {
 
 var parserTests = []parserTest{
 	{"()", "()"},
-	{"10", "10"},
-	{"123456789", "123456789"},
+	{"#f", "#f"},
+	{"#t", "#t"},
+	{"1234567890", "1234567890"},
 	{"(+)", "0"},
 	{"(- 1)", "1"},
 	{"(*)", "1"},
@@ -26,21 +26,24 @@ var parserTests = []parserTest{
 	{"(* (* 3 3) 3)", "27"},
 	{"(/ 100 (/ 4 2))", "50"},
 	{"(+ (* 100 3) (/ (- 4 2) 2))", "301"},
+	{"(number? 100)", "#t"},
+	{"(number? (+ 3 (* 2 8)))", "#t"},
+	{"(number? #t)", "#f"},
+	{"(number? ()", "#f"},
 }
 
 func TestParser(t *testing.T) {
 	for _, test := range parserTests {
 		p := NewParser(test.source)
-		if p.Peek() != scanner.EOF {
-			parseObject := p.Parse()
-			if parseObject == nil {
-				t.Errorf("%s => <nil>; want %s", test.source, test.result)
-				return
-			}
-			actual := parseObject.String()
-			if actual != test.result {
-				t.Errorf("%s => %s; want %s", test.source, actual, test.result)
-			}
+		p.Peek()
+		parseObject := p.Parse()
+		if parseObject == nil {
+			t.Errorf("%s => <nil>; want %s", test.source, test.result)
+			return
+		}
+		actual := parseObject.String()
+		if actual != test.result {
+			t.Errorf("%s => %s; want %s", test.source, actual, test.result)
 		}
 	}
 }

@@ -37,3 +37,8 @@ func NewNumber(argument interface{}) *Number {
 func (n *Number) String() string {
 	return strconv.Itoa(n.value)
 }
+
+// IsNumber is checking wether is number or not.
+func (n *Number) IsNumber() bool {
+	return true
+}

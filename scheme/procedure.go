@@ -17,10 +17,11 @@ type Procedure struct {
 }
 
 var builtinProcedures = Binding{
-	"+": NewProcedure(plus),
-	"-": NewProcedure(minus),
-	"*": NewProcedure(multiply),
-	"/": NewProcedure(divide),
+	"+":       NewProcedure(plus),
+	"-":       NewProcedure(minus),
+	"*":       NewProcedure(multiply),
+	"/":       NewProcedure(divide),
+	"number?": NewProcedure(isNumber),
 }
 
 // NewProcedure is a function for definition a new procedure.
@@ -34,6 +35,10 @@ func NewProcedure(function func(Object) Object) *Procedure {
 func (p *Procedure) invoke(argument Object) Object {
 	return p.function(argument)
 }
+
+//
+// *** Builtin Procedures ***
+//
 
 func plus(arguments Object) Object {
 	sum := 0
@@ -52,30 +57,23 @@ func plus(arguments Object) Object {
 }
 
 func minus(arguments Object) Object {
-	switch arguments.(type) {
-	case *Pair:
-		pair := arguments.(*Pair)
-		if pair.IsEmpty() {
-			log.Print("procedure requires at least one argument: (-)")
-			return nil
-		}
-		difference := pair.EvaledCar().(*Number).value
-		list := pair.Cdr
-		for {
-			if list == nil {
-				break
-			}
-			if car := list.EvaledCar(); car != nil {
-				number := car.(*Number)
-				difference -= number.value
-			}
-			list = list.Cdr
-		}
-		return NewNumber(difference)
-	default:
+	if !arguments.IsList() || arguments.(*Pair).ListLength() < 1 {
 		log.Print("procedure requires at least one argument: (-)")
-		return nil
 	}
+	pair := arguments.(*Pair)
+	difference := pair.EvaledCar().(*Number).value
+	list := pair.Cdr
+	for {
+		if list == nil {
+			break
+		}
+		if car := list.EvaledCar(); car != nil {
+			number := car.(*Number)
+			difference -= number.value
+		}
+		list = list.Cdr
+	}
+	return NewNumber(difference)
 }
 
 func multiply(arguments Object) Object {
@@ -119,4 +117,20 @@ func divide(arguments Object) Object {
 		log.Print("procedure requires at least one argument: (/)")
 		return nil
 	}
+}
+
+func isNumber(object Object) Object {
+	if object.IsApplication() {
+		object = object.(*Application).applyProcedure()
+	}
+	if object.IsList() {
+		list := object.(*Pair)
+		if list.ListLength() == 1 {
+			object = list.EvaledCar()
+		} else {
+			log.Printf("Wrong number of arguments: number? requires 1, but got %d", list.ListLength())
+			return nil
+		}
+	}
+	return NewBoolean(object.IsNumber())
 }

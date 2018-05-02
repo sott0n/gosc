@@ -28,3 +28,8 @@ func (a *Application) applyProcedure() Object {
 	}
 	return a.environment.invokeProcedure(a.procedureVariable, a.arguments)
 }
+
+// IsApplication is checking boolean wether is application or not.
+func (a *Application) IsApplication() bool {
+	return true
+}

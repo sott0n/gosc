@@ -33,7 +33,21 @@ func (p *Pair) EvaledCar() Object {
 	}
 }
 
+// IsList is checking wether is list or not.
+func (p *Pair) IsList() bool {
+	return true
+}
+
 // IsEmpty is checking empty value.
 func (p *Pair) IsEmpty() bool {
 	return p.Car == nil && p.Cdr == nil
+}
+
+// ListLength returns length of list.
+func (p *Pair) ListLength() int {
+	if p.IsEmpty() {
+		return 0
+	} else {
+		return p.Cdr.ListLength() + 1
+	}
 }
