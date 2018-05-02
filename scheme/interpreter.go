@@ -29,7 +29,7 @@ func (i *Interpreter) IndentLevel() int {
 func (i *Interpreter) Eval() {
 	for i.Peek() != scanner.EOF {
 		expression := i.Parser.Parse()
-		i.DumpAST(expression)
+		i.DumpAST(expression, 0)
 
 		if expression != nil {
 			return
@@ -39,28 +39,23 @@ func (i *Interpreter) Eval() {
 }
 
 // DumpAST is a defining of dumping abstrct tree.
-func (i *Interpreter) DumpAST(object Object) {
-	i.dumpASTWithIndent(object, 0)
-}
-
-// dumpASTWithIndent is a dumping AST function with specified indent.
-func (i *Interpreter) dumpASTWithIndent(object Object, indentLevel int) {
+func (i *Interpreter) DumpAST(object Object, indentLevel int) {
 	if object == nil {
 		return
 	}
 	switch object.(type) {
 	case *Application:
 		i.printWithIndent("Application", indentLevel)
-		i.dumpASTWithIndent(object.(*Application).procedureVariable, indentLevel+1)
-		i.dumpASTWithIndent(object.(*Application).arguments, indentLevel+1)
+		i.DumpAST(object.(*Application).procedureVariable, indentLevel+1)
+		i.DumpAST(object.(*Application).arguments, indentLevel+1)
 	case *Pair:
 		pair := object.(*Pair)
 		if pair.Car == nil && pair.Cdr == nil {
 			return
 		}
 		i.printWithIndent("Pair", indentLevel)
-		i.dumpASTWithIndent(pair.Car, indentLevel+1)
-		i.dumpASTWithIndent(pair.Cdr, indentLevel+1)
+		i.DumpAST(pair.Car, indentLevel+1)
+		i.DumpAST(pair.Cdr, indentLevel+1)
 	case *Number:
 		i.printWithIndent(fmt.Sprintf("Number(%d)", object.(*Number).value), indentLevel)
 	case *Boolean:
