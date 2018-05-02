@@ -19,6 +19,7 @@ type Procedure struct {
 var builtinProcedures = Binding{
 	"+": NewProcedure(plus),
 	"-": NewProcedure(minus),
+	"*": NewProcedure(multiply),
 }
 
 // NewProcedure is a function for definition a new procedure.
@@ -57,7 +58,7 @@ func minus(arguments Object) Object {
 			log.Print("procedure requires at least one argument: (-)")
 			return nil
 		}
-		result := pair.EvaledCar().(*Number).value
+		difference := pair.EvaledCar().(*Number).value
 		list := pair.Cdr
 		for {
 			if list == nil {
@@ -65,13 +66,29 @@ func minus(arguments Object) Object {
 			}
 			if car := list.EvaledCar(); car != nil {
 				number := car.(*Number)
-				result -= number.value
+				difference -= number.value
 			}
 			list = list.Cdr
 		}
-		return NewNumber(result)
+		return NewNumber(difference)
 	default:
 		log.Print("procedure requires at least one argument: (-)")
 		return nil
 	}
+}
+
+func multiply(arguments Object) Object {
+	product := 1
+	for arguments != nil {
+		pair := arguments.(*Pair)
+		if pair == nil {
+			break
+		}
+		if car := pair.EvaledCar(); car != nil {
+			number := car.(*Number)
+			product *= number.value
+		}
+		arguments = pair.Cdr
+	}
+	return NewNumber(product)
 }

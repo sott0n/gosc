@@ -32,7 +32,11 @@ func (e *Environment) invokeProcedure(variable, arguments Object) Object {
 	if variable == nil {
 		log.Fatal("Invoke procedure for <nil> variable.")
 	}
-	procedure := e.binding[variable.(*Variable).identifier]
+	identifier := variable.(*Variable).identifier
+	procedure := e.binding[identifier]
+	if procedure == nil {
+		log.Printf("Unbound variable: %s\n", identifier)
+	}
 	return procedure.invoke(arguments)
 }
 
