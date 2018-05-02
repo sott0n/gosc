@@ -17,6 +17,8 @@ type tokenizeTest struct {
 
 var tokenTypeTests = []tokenTypeTest{
 	{"100", IntToken},
+	{"#f", BooleanToken},
+	{"#f", BooleanToken},
 	{"+", IdentifierToken},
 	{"-", IdentifierToken},
 	{"f2000", IdentifierToken},
