@@ -21,6 +21,11 @@ type Pair struct {
 	environment *Environment
 }
 
+// Eval is Pair's eval IF.
+func (p *Pair) Eval() Object {
+	return p
+}
+
 // String is a string function with accessing Pair.
 func (p *Pair) String() string {
 	if p.IsEmpty() {
@@ -34,16 +39,6 @@ func (p *Pair) String() string {
 		return fmt.Sprintf("(%s)", strings.Join(tokens, " "))
 	} else {
 		return "Not implemented."
-	}
-}
-
-// EvaledCar is applying Car procedure.
-func (p *Pair) EvaledCar() Object {
-	switch p.Car.(type) {
-	case *Application:
-		return p.Car.(*Application).applyProcedure()
-	default:
-		return p.Car
 	}
 }
 

@@ -14,6 +14,11 @@ func NewSymbol(identifier string) *Symbol {
 	return &Symbol{identifier: identifier}
 }
 
+// Eval is symbol's eval IF.
+func (s *Symbol) Eval() Object {
+	return s
+}
+
 func (s *Symbol) String() string {
 	return s.identifier
 }

@@ -14,8 +14,13 @@ type Application struct {
 	environment       *Environment
 }
 
+// Eval is eval function IF that returns applyProcedure.
+func (a *Application) Eval() Object {
+	return a.applyProcedure()
+}
+
 func (a *Application) String() string {
-	result := a.applyProcedure()
+	result := a.Eval()
 	if result == nil {
 		log.Fatal("Procedure application returns nil.")
 	}

@@ -20,6 +20,11 @@ func NewVariable(identifier string, environment *Environment) *Variable {
 	}
 }
 
+// Eval is variable's eval IF.
+func (v *Variable) Eval() Object {
+	return v
+}
+
 func (v *Variable) String() string {
 	return v.environment.binding[v.identifier].String()
 }

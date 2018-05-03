@@ -8,7 +8,6 @@ import "log"
 
 // Environment is a struction for environment.
 type Environment struct {
-	ObjectBase
 	parent  *Environment
 	binding Binding
 }

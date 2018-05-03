@@ -8,7 +8,12 @@ type Definition struct {
 	value       Object
 }
 
-func (d *Definition) String() string {
+// Eval is definition's eval function.
+func (d *Definition) Eval() Object {
 	TopLevel.Bind(d.variable.identifier, d.value)
-	return d.variable.identifier
+	return NewSymbol(d.variable.identifier)
+}
+
+func (d *Definition) String() string {
+	return d.Eval().String()
 }

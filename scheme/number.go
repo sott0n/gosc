@@ -34,6 +34,11 @@ func NewNumber(argument interface{}) *Number {
 	return &Number{value: value}
 }
 
+// Eval is number's eval IF.
+func (n *Number) Eval() Object {
+	return n
+}
+
 func (n *Number) String() string {
 	return strconv.Itoa(n.value)
 }

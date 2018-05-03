@@ -6,6 +6,7 @@ package scheme
 
 // Object is an abstruct class for scheme object.
 type Object interface {
+	Eval() Object
 	String() string
 	IsNumber() bool
 	IsPair() bool
@@ -15,6 +16,11 @@ type Object interface {
 
 // ObjectBase is an abstruct class for base scheme object.
 type ObjectBase struct {
+}
+
+// Eval is object's eval IF.
+func (o *ObjectBase) Eval() Object {
+	panic("This type's String() is not implemented yet.")
 }
 
 func (o *ObjectBase) String() string {
