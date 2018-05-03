@@ -47,7 +47,6 @@ func (p *Pair) IsEmpty() bool {
 func (p *Pair) ListLength() int {
 	if p.IsEmpty() {
 		return 0
-	} else {
-		return p.Cdr.ListLength() + 1
 	}
+	return p.Cdr.ListLength() + 1
 }
