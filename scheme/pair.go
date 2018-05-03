@@ -7,6 +7,8 @@
 
 package scheme
 
+import "log"
+
 // Pair is a struction for car and cdr.
 type Pair struct {
 	ObjectBase
@@ -36,6 +38,29 @@ func (p *Pair) EvaledCar() Object {
 // IsList is checking wether is list or not.
 func (p *Pair) IsList() bool {
 	return true
+}
+
+// ElementAt is searching procedure in element of list.
+func (p *Pair) ElementAt(index int) Object {
+	if !p.IsList() {
+		log.Fatal("ElementAt() was called for not list object.")
+	} else if index < 0 {
+		log.Fatal("ElementAt() was called with negative index.")
+	}
+	pair := p
+	for {
+		if index == 0 {
+			switch pair.Car.(type) {
+			case *Application:
+				return pair.Car.(*Application).applyProcedure()
+			default:
+				return pair.Car
+			}
+		} else {
+			pair = pair.Cdr
+			index--
+		}
+	}
 }
 
 // IsEmpty is checking empty value.

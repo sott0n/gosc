@@ -13,6 +13,13 @@ type Variable struct {
 }
 
 // NewVariable is a function for scheme variable object.
-func NewVariable(identifier string) *Variable {
-	return &Variable{identifier: identifier}
+func NewVariable(identifier string, environment *Environment) *Variable {
+	return &Variable{
+		identifier:  identifier,
+		environment: environment,
+	}
+}
+
+func (v *Variable) String() string {
+	return v.environment.binding[v.identifier].String()
 }

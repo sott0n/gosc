@@ -14,7 +14,7 @@ type Environment struct {
 }
 
 // Binding is a struction for binding.
-type Binding map[string]*Procedure
+type Binding map[string]Object
 
 // TopLevel is a setting environment.
 var TopLevel = Environment{
@@ -26,6 +26,11 @@ func newEnvironment() *Environment {
 	return &Environment{}
 }
 
+// Bind is to bind identifier and value in environment.
+func (e *Environment) Bind(identifier string, value Object) {
+	e.binding[identifier] = value
+}
+
 // Search procedure which is binded with given variable from environment,
 // and invoke the procedure with given arguments.
 func (e *Environment) invokeProcedure(variable, arguments Object) Object {
@@ -33,7 +38,7 @@ func (e *Environment) invokeProcedure(variable, arguments Object) Object {
 		log.Fatal("Invoke procedure for <nil> variable.")
 	}
 	identifier := variable.(*Variable).identifier
-	procedure := e.binding[identifier]
+	procedure := e.binding[identifier].(*Procedure)
 	if procedure == nil {
 		log.Printf("Unbound variable: %s\n", identifier)
 	}
