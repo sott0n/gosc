@@ -26,5 +26,5 @@ func (v *Variable) Eval() Object {
 }
 
 func (v *Variable) String() string {
-	return v.environment.binding[v.identifier].String()
+	return v.environment.bindedObject(v.identifier).String()
 }

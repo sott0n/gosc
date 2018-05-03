@@ -29,7 +29,7 @@ func (i *Interpreter) Eval() {
 		if expression != nil {
 			return
 		}
-		fmt.Println(expression.String())
+		fmt.Println(expression.Eval())
 	}
 }
 
