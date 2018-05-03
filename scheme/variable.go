@@ -22,9 +22,9 @@ func NewVariable(identifier string, environment *Environment) *Variable {
 
 // Eval is variable's eval IF.
 func (v *Variable) Eval() Object {
-	return v
+	return v.environment.boundedObject(v.identifier)
 }
 
 func (v *Variable) String() string {
-	return v.environment.bindedObject(v.identifier).String()
+	return v.Eval().String()
 }

@@ -37,14 +37,14 @@ func (e *Environment) invokeProcedure(variable, arguments Object) Object {
 		log.Fatal("Invoke procedure for <nil> variable.")
 	}
 	identifier := variable.(*Variable).identifier
-	procedure := e.bindedObject(identifier).(*Procedure)
+	procedure := e.boundedObject(identifier).(*Procedure)
 	if procedure == nil {
 		log.Printf("Unbound variable: %s\n", identifier)
 	}
 	return procedure.invoke(arguments)
 }
 
-func (e *Environment) bindedObject(identifier string) Object {
+func (e *Environment) boundedObject(identifier string) Object {
 	return e.scopedBinding()[identifier]
 }
 
