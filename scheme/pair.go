@@ -7,7 +7,11 @@
 
 package scheme
 
-import "log"
+import (
+	"fmt"
+	"log"
+	"strings"
+)
 
 // Pair is a struction for car and cdr.
 type Pair struct {
@@ -21,8 +25,16 @@ type Pair struct {
 func (p *Pair) String() string {
 	if p.IsEmpty() {
 		return "()"
+	} else if p.IsList() {
+		length := p.ListLength()
+		tokens := []string{}
+		for i := 0; i < length; i++ {
+			tokens = append(tokens, p.ElementAt(i).String())
+		}
+		return fmt.Sprintf("(%s)", strings.Join(tokens, " "))
+	} else {
+		return "Not implemented."
 	}
-	return "Not implemented."
 }
 
 // EvaledCar is applying Car procedure.

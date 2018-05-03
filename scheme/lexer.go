@@ -31,6 +31,7 @@ var identifierExp = fmt.Sprintf("[%s][%s%s]*", identifierChars, identifierChars,
 func NewLexer(source string) *Lexer {
 	lexer := new(Lexer)
 	lexer.Init(strings.NewReader(source))
+	lexer.Mode &^= scanner.ScanChars
 	return lexer
 }
 
@@ -91,6 +92,12 @@ func (l *Lexer) AllTokens() []string {
 }
 
 func (l *Lexer) nextToken() string {
+	// text/scanner scans text which starts with "'" in one token.
+	if l.Peek() == '\'' {
+		l.Next()
+		return "'"
+	}
+
 	l.Scan()
 	if l.TokenText() == "#" {
 		// text/scanner scans '#t' as '#' and 't'.

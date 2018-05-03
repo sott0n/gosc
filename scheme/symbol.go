@@ -13,3 +13,7 @@ type Symbol struct {
 func NewSymbol(identifier string) *Symbol {
 	return &Symbol{identifier: identifier}
 }
+
+func (s *Symbol) String() string {
+	return s.identifier
+}
