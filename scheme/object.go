@@ -8,6 +8,7 @@ package scheme
 type Object interface {
 	String() string
 	IsNumber() bool
+	IsPair() bool
 	IsList() bool
 	IsApplication() bool
 }
@@ -22,6 +23,11 @@ func (o *ObjectBase) String() string {
 
 // IsNumber is an interface function of number boolean.
 func (o *ObjectBase) IsNumber() bool {
+	return false
+}
+
+// IsPair is an interface function of pair boolean.
+func (o *ObjectBase) IsPair() bool {
 	return false
 }
 

@@ -47,9 +47,20 @@ func (p *Pair) EvaledCar() Object {
 	}
 }
 
-// IsList is checking wether is list or not.
-func (p *Pair) IsList() bool {
+// IsPair is checking wether is pair or not.
+func (p *Pair) IsPair() bool {
 	return true
+}
+
+// IsList is checking ehther is list or not
+func (p *Pair) IsList() bool {
+	pair := p
+	for {
+		if pair.IsEmpty() {
+			return true
+		}
+		pair = pair.Cdr
+	}
 }
 
 // ElementAt is searching procedure in element of list.

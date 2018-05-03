@@ -7,8 +7,20 @@ type lengthTest struct {
 	length int
 }
 
+type listTest struct {
+	source string
+	result bool
+}
+
 var lengthTests = []lengthTest{
 	{"()", 0},
+	{"'((1 2) 3)", 2},
+	{"'(1 2 3)", 3},
+}
+
+var listTests = []listTest{
+	{"'()", true},
+	{"'(1 2 3)", true},
 }
 
 func TestListLength(t *testing.T) {
@@ -20,6 +32,20 @@ func TestListLength(t *testing.T) {
 		actual := list.ListLength()
 		if actual != test.length {
 			t.Errorf("%s => %d; want %d", test.source, actual, test.length)
+		}
+	}
+}
+
+func TestIsList(t *testing.T) {
+	for _, test := range listTests {
+		p := NewParser(test.source)
+		p.Peek()
+		parseObject := p.Parse()
+		list := parseObject.(*Pair)
+
+		actual := list.IsList()
+		if actual != test.result {
+			t.Errorf("%s => %s; want %s", test.source, actual, test.result)
 		}
 	}
 }

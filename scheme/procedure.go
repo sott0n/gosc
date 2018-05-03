@@ -57,9 +57,14 @@ func plus(arguments Object) Object {
 }
 
 func minus(arguments Object) Object {
-	if !arguments.IsList() || arguments.(*Pair).ListLength() < 1 {
-		log.Print("procedure requires at least one argument: (-)")
+	if !arguments.IsList() {
+		log.Print("Error: proper list required for function application or macro use.")
+		return nil
+	} else if arguments.(*Pair).ListLength() < 1 {
+		log.Print("Error: procedure requires at least one argument.")
+		return nil
 	}
+
 	pair := arguments.(*Pair)
 	difference := pair.EvaledCar().(*Number).value
 	list := pair.Cdr
@@ -93,8 +98,12 @@ func multiply(arguments Object) Object {
 }
 
 func divide(arguments Object) Object {
-	if !arguments.IsList() || arguments.(*Pair).ListLength() < 1 {
-		log.Print("procedure requires at least one argument: (/)")
+	if !arguments.IsList() {
+		log.Print("Error: proper list required for function application or macro use.")
+		return nil
+	} else if arguments.(*Pair).ListLength() < 1 {
+		log.Print("Error: procedure requires at least one argument.")
+		return nil
 	}
 	pair := arguments.(*Pair)
 	quotient := pair.EvaledCar().(*Number).value
