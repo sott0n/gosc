@@ -5,7 +5,7 @@ jobs:
       # specify the version
       - image: circleci/golang:1.9
 
-    working_directory: /go/src/github.com/sott0n/go-scheme
+    working_directory: /go/src/github.com/sott0n/gosc
     steps:
       - checkout
       - run: go test -v ./scheme
