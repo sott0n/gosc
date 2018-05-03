@@ -13,8 +13,9 @@ import (
 
 // Options is definition gosc's selection option.
 type Options struct {
-	FileName string `short:"f" long:"file" description:"interpret selected scheme source file"`
-	DumpAST  bool   `short:"a" long:"ast" default:"false" description:"whether leafnodes are plotte"`
+	FileName   string   `short:"f" long:"file" description:"interpret selected scheme source file"`
+	Expression []string `short:"e" long:"expression" description:"execute given expression"`
+	DumpAST    bool     `short:"a" long:"ast" default:"false" description:"whether leafnodes are plotte"`
 }
 
 func main() {
@@ -24,6 +25,8 @@ func main() {
 	}
 	if len(options.FileName) > 0 {
 		executeSourceCode(options)
+	} else if len(options.Expression) > 0 {
+		executeExpression(strings.Join(options.Expression, " "), options.DumpAST)
 	} else {
 		repl(options)
 	}
@@ -34,8 +37,12 @@ func executeSourceCode(options *Options) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	interpreter := scheme.NewInterpreter(string(buffer))
-	interpreter.Eval(options.DumpAST)
+	executeExpression(string(buffer), options.DumpAST)
+}
+
+func executeExpression(expression string, dumpAST bool) {
+	interpreter := scheme.NewInterpreter(expression)
+	interpreter.Eval(dumpAST)
 }
 
 func repl(options *Options) {
@@ -57,10 +64,7 @@ func repl(options *Options) {
 			interpreter := scheme.NewInterpreter(expression)
 			indentLevel = interpreter.IndentLevel()
 			if indentLevel == 0 {
-				// Because the IndentLevel() method changes its reading position,
-				// recreate intepreter to initialize the position.
-				interpreter := scheme.NewInterpreter(expression)
-				interpreter.Eval(options.DumpAST)
+				executeExpression(expression, options.DumpAST)
 				break
 			} else if indentLevel < 0 {
 				log.Println("Error: extra close parentheses.")

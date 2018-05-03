@@ -26,6 +26,12 @@ $ gosc
 $ gosc -f [filename].scm
 ```
 
+#### One liner
+
+```bash
+$ gosc -e "(+ 1 2)"
+```
+
 #### Dump AST of input source code
 
 ```bash
