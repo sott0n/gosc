@@ -4,6 +4,40 @@
 
 **gosc** is a toy scheme processing by Golang.
 
+## How to install
+
+You only type `go get` below:  
+
+```bash
+$ go get github.com/sott0n/gosc
+```
+
+## How to use
+
+#### REPL mode : invoke interactive shell
+
+```bash
+$ gosc
+```
+
+#### Execute scheme file
+
+```bash
+$ gosc -f [filename].scm
+```
+
+#### Dump AST of input source code
+
+```bash
+$ gosc -a
+```
+
+#### Show Help
+
+```bash
+$ gosc -h
+```
+
 ## Syntax and Function
 
 | Type | Support | Check |
