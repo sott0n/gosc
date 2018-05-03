@@ -20,11 +20,6 @@ func NewInterpreter(source string) *Interpreter {
 	return &Interpreter{NewParser(source)}
 }
 
-// IndentLevel is a struction to save a level of indent.
-func (i *Interpreter) IndentLevel() int {
-	return 0
-}
-
 // Eval is a struction to eval on interpreter.
 func (i *Interpreter) Eval() {
 	for i.Peek() != scanner.EOF {

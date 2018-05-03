@@ -63,6 +63,20 @@ func (l *Lexer) NextToken() string {
 	return l.nextToken()
 }
 
+// IndentLevel return position of indent from symbol ( and ).
+func (l *Lexer) IndentLevel() int {
+	tokens := l.AllTokens()
+	openCount, closedCount := 0, 0
+	for _, token := range tokens {
+		if token == "(" {
+			openCount++
+		} else if token == ")" {
+			closedCount++
+		}
+	}
+	return openCount - closedCount
+}
+
 // AllTokens returns token's list.
 func (l *Lexer) AllTokens() []string {
 	tokens := []string{}

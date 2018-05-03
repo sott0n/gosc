@@ -32,12 +32,20 @@ func repl() {
 			if currentLine == "exit" {
 				return
 			}
+			expression += " "
 			expression += currentLine
 
 			interpreter := scheme.NewInterpreter(expression)
-			if indentLevel = interpreter.IndentLevel(); indentLevel == 0 {
+			indentLevel = interpreter.IndentLevel()
+			if indentLevel == 0 {
+				// Because the IndentLevel() method changes its reading position,
+				// recreate intepreter to initialize the position.
 				interpreter.Eval()
 				break
+			} else if indentLevel < 0 {
+				log.Println("Error: extra close parentheses.")
+				expression = ""
+				indentLevel = 0
 			}
 		}
 	}
