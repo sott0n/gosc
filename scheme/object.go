@@ -24,7 +24,7 @@ func (o *ObjectBase) Eval() Object {
 }
 
 func (o *ObjectBase) String() string {
-	return "This type's String() is not implemented yet."
+	panic("This object's String() is not implemented yet.")
 }
 
 // IsNumber is an interface function of number boolean.

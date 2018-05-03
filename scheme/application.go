@@ -4,8 +4,6 @@
 
 package scheme
 
-import "log"
-
 // Application is a struction for application.
 type Application struct {
 	ObjectBase
@@ -22,14 +20,14 @@ func (a *Application) Eval() Object {
 func (a *Application) String() string {
 	result := a.Eval()
 	if result == nil {
-		log.Fatal("Procedure application returns nil.")
+		panic("Procedure application returns nil.")
 	}
 	return result.String()
 }
 
 func (a *Application) applyProcedure() Object {
 	if a.environment == nil {
-		log.Fatal("Procedure does not have environment.")
+		panic("Procedure does not have environment.")
 	}
 	return a.environment.invokeProcedure(a.procedureVariable, a.arguments)
 }

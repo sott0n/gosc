@@ -2,10 +2,6 @@
 
 package scheme
 
-import (
-	"log"
-)
-
 // Boolean is a type object, true or false.
 type Boolean struct {
 	ObjectBase
@@ -23,7 +19,7 @@ func NewBoolean(value interface{}) *Boolean {
 		} else if value == "#f" {
 			return &Boolean{value: false}
 		} else {
-			log.Fatal("Unexpected value for NewBoolean.")
+			panic("Unexpected value for NewBoolean.")
 		}
 	}
 	return nil

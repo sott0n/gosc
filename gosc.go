@@ -67,7 +67,7 @@ func repl(options *Options) {
 				executeExpression(expression, options.DumpAST)
 				break
 			} else if indentLevel < 0 {
-				log.Println("Error: extra close parentheses.")
+				fmt.Println("*** ERROR: extra close parentheses.")
 				expression = ""
 				indentLevel = 0
 			}

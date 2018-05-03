@@ -4,7 +4,6 @@ package scheme
 
 import (
 	"fmt"
-	"log"
 	"regexp"
 	"strings"
 	"text/scanner"
@@ -61,6 +60,7 @@ func (l Lexer) PeekToken() string {
 // NextToken returns next token and moves current token reading
 // position to next token position.
 func (l *Lexer) NextToken() string {
+	defer l.ensureAvailability()
 	return l.nextToken()
 }
 
@@ -106,7 +106,7 @@ func (l *Lexer) nextToken() string {
 		case "t", "f":
 			return fmt.Sprintf("#%s", l.TokenText())
 		default:
-			log.Fatal("Tokens which start from '#' are not implemented except #f, #t.")
+			panic("Tokens which start from '#' are not implemented except #f, #t.")
 		}
 	} else if l.matchRegexp(l.TokenText(), fmt.Sprintf("^%s$", identifierExp)) {
 		// text/scanner scans some signs as splitted token from alphabet token.
@@ -129,7 +129,12 @@ func (l *Lexer) isIdentifierChar(char rune) bool {
 func (l *Lexer) matchRegexp(matchString string, expression string) bool {
 	re, err := regexp.Compile(expression)
 	if err != nil {
-		log.Fatal(err.Error())
+		panic(err.Error())
 	}
 	return re.MatchString(matchString)
+}
+
+func (l *Lexer) ensureAvailability() {
+	// Error message will be printed by interpreter.
+	recover()
 }
