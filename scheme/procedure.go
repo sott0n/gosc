@@ -27,6 +27,7 @@ func (p *Procedure) Eval() Object {
 	return p
 }
 
+// Invoke is Procedure's function IF.
 func (p *Procedure) Invoke(argument Object) Object {
 	return p.function(argument)
 }
