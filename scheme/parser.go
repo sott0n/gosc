@@ -51,7 +51,7 @@ func (p *Parser) parseObject(environment *Environment) Object {
 	case BooleanToken:
 		return NewBoolean(token)
 	case StringToken:
-		return NewString(token)
+		return NewString(token[1 : len(token)-1])
 	default:
 		return nil
 	}

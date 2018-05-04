@@ -2,26 +2,30 @@
 
 package scheme
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 var builtinProcedures = Binding{
-	"+":          NewProcedure(plus),
-	"-":          NewProcedure(minus),
-	"*":          NewProcedure(multiply),
-	"/":          NewProcedure(divide),
-	"=":          NewProcedure(equal),
-	"number?":    NewProcedure(isNumber),
-	"null?":      NewProcedure(isNull),
-	"procedure?": NewProcedure(isProcedure),
-	"boolean?":   NewProcedure(isBoolean),
-	"pair?":      NewProcedure(isPair),
-	"list?":      NewProcedure(isList),
-	"symbol?":    NewProcedure(isSymbol),
-	"string?":    NewProcedure(isString),
-	"not":        NewProcedure(not),
-	"car":        NewProcedure(car),
-	"cdr":        NewProcedure(cdr),
-	"list":       NewProcedure(list),
+	"+":             NewProcedure(plus),
+	"-":             NewProcedure(minus),
+	"*":             NewProcedure(multiply),
+	"/":             NewProcedure(divide),
+	"=":             NewProcedure(equal),
+	"number?":       NewProcedure(isNumber),
+	"null?":         NewProcedure(isNull),
+	"procedure?":    NewProcedure(isProcedure),
+	"boolean?":      NewProcedure(isBoolean),
+	"pair?":         NewProcedure(isPair),
+	"list?":         NewProcedure(isList),
+	"symbol?":       NewProcedure(isSymbol),
+	"string?":       NewProcedure(isString),
+	"not":           NewProcedure(not),
+	"car":           NewProcedure(car),
+	"cdr":           NewProcedure(cdr),
+	"list":          NewProcedure(list),
+	"string-append": NewProcedure(stringAppend),
 }
 
 func assertListMinimum(arguments Object, minimum int) {
@@ -41,12 +45,12 @@ func assertListEqual(arguments Object, length int) {
 	}
 }
 
-func assertObjectsType(objects []Object, typename string) {
-	if typename == "Number" {
-		for _, object := range objects {
-			if !object.IsNumber() {
-				panic("Compiled Error: procedure expects arguments to be Number.")
-			}
+func assertObjectsType(objects []Object, typeName string) {
+	for _, object := range objects {
+		if typeName == "Number" && !object.IsNumber() {
+			panic("Compile Error: number required.")
+		} else if typeName == "String" && !object.IsString() {
+			panic("Compile Error: string required.")
 		}
 	}
 }
@@ -218,4 +222,17 @@ func cdr(arguments Object) Object {
 
 func list(arguments Object) Object {
 	return arguments
+}
+
+func stringAppend(arguments Object) Object {
+	assertListMinimum(arguments, 0)
+
+	stringObjects := evaledObjects(arguments.(*Pair).Elements())
+	assertObjectsType(stringObjects, "String")
+
+	texts := []string{}
+	for _, stringObject := range stringObjects {
+		texts = append(texts, stringObject.(*String).text)
+	}
+	return NewString(strings.Join(texts, ""))
 }

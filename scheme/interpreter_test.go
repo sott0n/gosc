@@ -56,6 +56,9 @@ var parserTests = []parserTest{
 	makeTest("(list 1 2 3)", "(1 2 3)"),
 	makeTest("(cdr (list 1 2 3))", "(2 3)"),
 
+	makeTest("(string-append)", "\"\""),
+	makeTest("(string-append \"a\" \" \" \"b\")", "\"a b\""),
+
 	makeTest("(number? 100)", "#t"),
 	makeTest("(number? (+ 3 (* 2 8)))", "#t"),
 	makeTest("(number? #t)", "#f"),
@@ -121,10 +124,13 @@ var evalErrorTests = []evalErrorTest{
 	{"(null? 1 2)", "Compile Error: Wrong number of arguments: number? requires 1, but got 2."},
 	{"(not)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
 
-	{"(+ 1 #t)", "Compiled Error: procedure expects arguments to be Number."},
-	{"(- 1 #t)", "Compiled Error: procedure expects arguments to be Number."},
-	{"(* ())", "Compiled Error: procedure expects arguments to be Number."},
-	{"(/ '(1 2 3))", "Compiled Error: procedure expects arguments to be Number."},
+	{"(+ 1 #t)", "Compile Error: number required."},
+	{"(- #t)", "Compile Error: number required."},
+	{"(* ())", "Compile Error: number required."},
+	{"(/ '(1 2 3))", "Compile Error: number required."},
+
+	{"(string-append #f)", "Compile Error: string required."},
+	{"(string-append 1)", "Compile Error: string required."},
 
 	{"(car ())", "Compile Error: pair required."},
 	{"(cdr ())", "Compile Error: pair required."},
