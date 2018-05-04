@@ -47,7 +47,7 @@ func (e *Environment) invokeProcedure(variable, arguments Object) Object {
 		panic("Invalid application.")
 	}
 	procedure := e.boundedObject(identifier).(*Procedure)
-	return procedure.invoke(arguments)
+	return procedure.Invoke(arguments)
 }
 
 func (e *Environment) boundedObject(identifier string) Object {

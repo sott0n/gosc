@@ -27,6 +27,6 @@ func (p *Procedure) Eval() Object {
 	return p
 }
 
-func (p *Procedure) invoke(argument Object) Object {
+func (p *Procedure) Invoke(argument Object) Object {
 	return p.function(argument)
 }
