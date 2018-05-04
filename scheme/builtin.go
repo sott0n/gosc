@@ -10,6 +10,7 @@ var builtinProcedures = Binding{
 	"*":       NewProcedure(multiply),
 	"/":       NewProcedure(divide),
 	"number?": NewProcedure(isNumber),
+	"null?":   NewProcedure(isNull),
 }
 
 func assertArgumentsMinimum(arguments Object, minimum int) bool {
@@ -25,7 +26,7 @@ func assertArgumentsEqual(arguments Object, length int) bool {
 	if !arguments.IsList() {
 		panic("Compile Error: proper list required for function application or macro use.")
 	} else if arguments.(*Pair).ListLength() != length {
-		panic(fmt.Sprintf("Compile Error: Wrong number of arguments: number? requires %d, but got %d/",
+		panic(fmt.Sprintf("Compile Error: Wrong number of arguments: number? requires %d, but got %d.",
 			length, arguments.(*Pair).ListLength()))
 	}
 	return true
@@ -119,4 +120,18 @@ func isNumber(arguments Object) Object {
 	}
 	object := arguments.(*Pair).ElementAt(0).Eval()
 	return NewBoolean(object.IsNumber())
+}
+
+func isNull(arguments Object) Object {
+	if !assertArgumentsEqual(arguments, 1) {
+		return nil
+	}
+
+	object := arguments.(*Pair).ElementAt(0).Eval()
+	switch object.(type) {
+	case *Pair:
+		return NewBoolean(object.(*Pair).IsEmpty())
+	default:
+		return NewBoolean(false)
+	}
 }
