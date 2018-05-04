@@ -78,6 +78,10 @@ var evalErrorTests = []evalErrorTest{
 	{"(number?)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
 	{"(null?)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
 	{"(null? 1 2)", "Compile Error: Wrong number of arguments: number? requires 1, but got 2."},
+	{"(+ 1 #t)", "Compiled Error: procedure expects arguments to be Number."},
+	{"(- 1 #t)", "Compiled Error: procedure expects arguments to be Number."},
+	{"(* ())", "Compiled Error: procedure expects arguments to be Number."},
+	{"(/ '(1 2 3))", "Compiled Error: procedure expects arguments to be Number."},
 }
 
 func makePT(source string, results ...string) parserTest {

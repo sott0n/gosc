@@ -41,12 +41,17 @@ func (p *Pair) String() string {
 	}
 }
 
-// IsPair is checking wether is pair or not.
+// IsEmpty is checking whether is empty is not.
+func (p *Pair) IsEmpty() bool {
+	return p.Car == nil && p.Cdr == nil
+}
+
+// IsPair is checking whether is pair or not.
 func (p *Pair) IsPair() bool {
 	return true
 }
 
-// IsList is checking ehther is list or not
+// IsList is checking whether is list or not
 func (p *Pair) IsList() bool {
 	pair := p
 	for {
@@ -57,26 +62,24 @@ func (p *Pair) IsList() bool {
 	}
 }
 
-// ElementAt is searching procedure in element of list.
-func (p *Pair) ElementAt(index int) Object {
-	if !p.IsList() {
-		panic("ElementAt() was called for not list object.")
-	} else if index < 0 {
-		panic("ElementAt() was called with negative index.")
-	}
+// Elements is returns each elements.
+func (p *Pair) Elements() []Object {
+	elements := []Object{}
 	pair := p
 	for {
-		if index == 0 {
-			return pair.Car
+		if pair.Car == nil {
+			break
+		} else {
+			elements = append(elements, pair.Car)
 		}
 		pair = pair.Cdr
-		index--
 	}
+	return elements
 }
 
-// IsEmpty is checking empty value.
-func (p *Pair) IsEmpty() bool {
-	return p.Car == nil && p.Cdr == nil
+// ElementAt is return value with specified index.
+func (p *Pair) ElementAt(index int) Object {
+	return p.Elements()[index]
 }
 
 // ListLength returns length of list.
