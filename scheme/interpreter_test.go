@@ -52,6 +52,10 @@ var parserTests = []parserTest{
 	makeTest("(car '(1 2))", "1"),
 	makeTest("(cdr '(1 2))", "(2)"),
 
+	makeTest("(list)", "()"),
+	makeTest("(list 1 2 3)", "(1 2 3)"),
+	makeTest("(cdr (list 1 2 3))", "(2 3)"),
+
 	makeTest("(number? 100)", "#t"),
 	makeTest("(number? (+ 3 (* 2 8)))", "#t"),
 	makeTest("(number? #t)", "#f"),
