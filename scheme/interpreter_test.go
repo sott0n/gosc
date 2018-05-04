@@ -21,6 +21,9 @@ var parserTests = []parserTest{
 	makeTest("#t", "#t"),
 	makeTest("1234567890", "1234567890"),
 
+	makeTest("\"\"", "\"\""),
+	makeTest("\"hello\"", "\"hello\""),
+
 	makeTest("(+)", "0"),
 	makeTest("(- 1)", "1"),
 	makeTest("(*)", "1"),

@@ -20,6 +20,7 @@ const (
 	IdentifierToken
 	IntToken
 	BooleanToken
+	StringToken
 )
 
 var identifierChars = "a-zA-Z?!*/<=>:$%^&_~"
@@ -46,6 +47,8 @@ func (l Lexer) TokenType() rune {
 		return IntToken
 	} else if l.matchRegexp(token, "^#(f|t)$") {
 		return BooleanToken
+	} else if l.matchRegexp(token, "\"[^\"]*\"") {
+		return StringToken
 	} else {
 		runes := []rune(token)
 		return runes[0]

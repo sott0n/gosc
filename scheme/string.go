@@ -13,7 +13,7 @@ type String struct {
 
 // NewString is a function for difinition a new String object.
 func NewString(text string) *String {
-	return &String{text: text}
+	return &String{text: text[1 : len(text)-1]}
 }
 
 // Eval is string's eval IF.
