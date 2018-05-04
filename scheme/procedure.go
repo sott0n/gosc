@@ -31,3 +31,8 @@ func (p *Procedure) Eval() Object {
 func (p *Procedure) Invoke(argument Object) Object {
 	return p.function(argument)
 }
+
+// IsProcedure is boolean function IF.
+func (p *Procedure) IsProcedure() bool {
+	return true
+}

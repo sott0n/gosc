@@ -5,12 +5,13 @@ package scheme
 import "fmt"
 
 var builtinProcedures = Binding{
-	"+":       NewProcedure(plus),
-	"-":       NewProcedure(minus),
-	"*":       NewProcedure(multiply),
-	"/":       NewProcedure(divide),
-	"number?": NewProcedure(isNumber),
-	"null?":   NewProcedure(isNull),
+	"+":          NewProcedure(plus),
+	"-":          NewProcedure(minus),
+	"*":          NewProcedure(multiply),
+	"/":          NewProcedure(divide),
+	"number?":    NewProcedure(isNumber),
+	"null?":      NewProcedure(isNull),
+	"procedure?": NewProcedure(isProcedure),
 }
 
 func assertArgumentsMinimum(arguments Object, minimum int) bool {
@@ -134,4 +135,13 @@ func isNull(arguments Object) Object {
 	default:
 		return NewBoolean(false)
 	}
+}
+
+func isProcedure(arguments Object) Object {
+	if !assertArgumentsEqual(arguments, 1) {
+		return nil
+	}
+
+	object := arguments.(*Pair).ElementAt(0).Eval()
+	return NewBoolean(object.IsProcedure())
 }

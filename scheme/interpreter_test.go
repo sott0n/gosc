@@ -40,6 +40,9 @@ var parserTests = []parserTest{
 	makePT("(number? #t)", "#f"),
 	makePT("(number? ()", "#f"),
 
+	makePT("(procedure? 1)", "#f"),
+	makePT("(procedure? +)", "#t"),
+
 	makePT("(null? 1)", "#f"),
 	makePT("(null? ()", "#t"),
 
@@ -67,6 +70,7 @@ var evalErrorTests = []evalErrorTest{
 	{"hello", "Unbound variable: hello"},
 	{"(quote)", "Compile Error: syntax-error: malformed quote."},
 	{"(define)", "Compile Error: syntax-error: (define)"},
+	{"(null?)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
 	{"(null? 1 2)", "Compile Error: Wrong number of arguments: number? requires 1, but got 2."},
 }
 

@@ -9,6 +9,7 @@ type Object interface {
 	Eval() Object
 	String() string
 	IsNumber() bool
+	IsProcedure() bool
 	IsPair() bool
 	IsList() bool
 	IsApplication() bool
@@ -29,6 +30,11 @@ func (o *ObjectBase) String() string {
 
 // IsNumber is an interface function of number boolean.
 func (o *ObjectBase) IsNumber() bool {
+	return false
+}
+
+// IsProcedure is an interface function of procedure boolean.
+func (o *ObjectBase) IsProcedure() bool {
 	return false
 }
 
