@@ -44,6 +44,11 @@ var parserTests = []parserTest{
 	makePT("(not 1)", "#f"),
 	makePT("(not ())", "#f"),
 
+	makePT("(car '(1))", "1"),
+	makePT("(cdr '(1))", "()"),
+	makePT("(car '(1 2))", "1"),
+	makePT("(cdr '(1 2))", "(2)"),
+
 	makePT("(number? 100)", "#t"),
 	makePT("(number? (+ 3 (* 2 8)))", "#t"),
 	makePT("(number? #t)", "#f"),
