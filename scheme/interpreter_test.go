@@ -77,6 +77,10 @@ var parserTests = []parserTest{
 	makeTest("(symbol? 1)", "#f"),
 	makeTest("(symbol? 'hello)", "#t"),
 
+	makeTest("(string? 1)", "#f"),
+	makeTest("(string? \"\")", "#t"),
+	makeTest("(string? \"hello\")", "#t"),
+
 	makeTest("(null? 1)", "#f"),
 	makeTest("(null? ()", "#t"),
 

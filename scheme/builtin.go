@@ -17,6 +17,7 @@ var builtinProcedures = Binding{
 	"pair?":      NewProcedure(isPair),
 	"list?":      NewProcedure(isList),
 	"symbol?":    NewProcedure(isSymbol),
+	"string?":    NewProcedure(isString),
 	"not":        NewProcedure(not),
 	"car":        NewProcedure(car),
 	"cdr":        NewProcedure(cdr),
@@ -182,6 +183,13 @@ func isSymbol(arguments Object) Object {
 
 	object := arguments.(*Pair).ElementAt(0).Eval()
 	return NewBoolean(object.IsSymbol())
+}
+
+func isString(arguments Object) Object {
+	assertListEqual(arguments, 1)
+
+	object := arguments.(*Pair).ElementAt(0).Eval()
+	return NewBoolean(object.IsString())
 }
 
 func not(arguments Object) Object {
