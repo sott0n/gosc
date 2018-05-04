@@ -38,6 +38,12 @@ var parserTests = []parserTest{
 	makePT("(= 2 1)", "#f"),
 	makePT("(= (* 100 3) 300)", "#t"),
 
+	makePT("(not #f)", "#t"),
+	makePT("(not #t)", "#f"),
+	makePT("(not (number? ()))", "#t"),
+	makePT("(not 1)", "#f"),
+	makePT("(not ())", "#f"),
+
 	makePT("(number? 100)", "#t"),
 	makePT("(number? (+ 3 (* 2 8)))", "#t"),
 	makePT("(number? #t)", "#f"),
@@ -84,6 +90,7 @@ var evalErrorTests = []evalErrorTest{
 	{"(number?)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
 	{"(null?)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
 	{"(null? 1 2)", "Compile Error: Wrong number of arguments: number? requires 1, but got 2."},
+	{"(not)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
 	{"(+ 1 #t)", "Compiled Error: procedure expects arguments to be Number."},
 	{"(- 1 #t)", "Compiled Error: procedure expects arguments to be Number."},
 	{"(* ())", "Compiled Error: procedure expects arguments to be Number."},
