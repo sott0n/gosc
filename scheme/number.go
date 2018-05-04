@@ -3,7 +3,6 @@
 package scheme
 
 import (
-	"fmt"
 	"strconv"
 )
 
@@ -24,10 +23,10 @@ func NewNumber(argument interface{}) *Number {
 	case string:
 		value, err = strconv.Atoi(argument.(string))
 		if err != nil {
-			panic(fmt.Sprintf("String conversion %s to integer failed.", argument.(string)))
+			runtimeError("String conversion %s to integer failed.", argument.(string))
 		}
 	default:
-		panic("Unexpected argument type for NewNumber()")
+		runtimeError("Unexpected argument type for NewNumber()")
 	}
 
 	return &Number{value: value}

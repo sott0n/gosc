@@ -3,7 +3,6 @@
 package scheme
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -32,18 +31,18 @@ var builtinProcedures = Binding{
 
 func assertListMinimum(arguments Object, minimum int) {
 	if !arguments.IsList() {
-		panic("Compile Error: proper list required for function application or macro use.")
+		compileError("proper list required for function application or macro use.")
 	} else if arguments.(*Pair).ListLength() < minimum {
-		panic(fmt.Sprintf("Compile Error: procedure requires at least %d arguments.", minimum))
+		compileError("procedure requires at least %d arguments.", minimum)
 	}
 }
 
 func assertListEqual(arguments Object, length int) {
 	if !arguments.IsList() {
-		panic("Compile Error: proper list required for function application or macro use.")
+		compileError("proper list required for function application or macro use.")
 	} else if arguments.(*Pair).ListLength() != length {
-		panic(fmt.Sprintf("Compile Error: Wrong number of arguments: number? requires %d, but got %d.",
-			length, arguments.(*Pair).ListLength()))
+		compileError("Wrong number of arguments: number? requires %d, but got %d.",
+			length, arguments.(*Pair).ListLength())
 	}
 }
 
@@ -66,6 +65,9 @@ func typeName(object Object) string {
 	case *Boolean:
 		return "boolean"
 	case *Pair:
+		if object.IsNull() {
+			return "null"
+		}
 		return "pair"
 	default:
 		return "Not Implemented typeName."
@@ -74,18 +76,8 @@ func typeName(object Object) string {
 
 func assertObjectType(object Object, assertType string) {
 	if assertType != typeName(object) {
-		panic(fmt.Sprintf("Compile Error: %s required, but got %s.", assertType, object))
+		compileError("%s required, but got %s.", assertType, object)
 	}
-}
-
-func assertPair(object Object) {
-	switch object.(type) {
-	case *Pair:
-		if object.IsPair() {
-			return
-		}
-	}
-	panic("Compile Error: pair required.")
 }
 
 func evaledObjects(objects []Object) []Object {
@@ -230,7 +222,7 @@ func car(arguments Object) Object {
 	assertListEqual(arguments, 1)
 
 	object := arguments.(*Pair).ElementAt(0).Eval()
-	assertPair(object)
+	assertObjectType(object, "pair")
 	return object.(*Pair).Car
 }
 
@@ -238,7 +230,7 @@ func cdr(arguments Object) Object {
 	assertListEqual(arguments, 1)
 
 	object := arguments.(*Pair).ElementAt(0).Eval()
-	assertPair(object)
+	assertObjectType(object, "pair")
 	return object.(*Pair).Cdr
 }
 

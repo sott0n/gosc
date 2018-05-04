@@ -25,11 +25,13 @@ type ObjectBase struct {
 
 // Eval is object's eval IF.
 func (o *ObjectBase) Eval() Object {
-	panic("This type's String() is not implemented yet.")
+	runtimeError("This type's String() is not implemented yet.")
+	return nil
 }
 
 func (o *ObjectBase) String() string {
-	panic("This object's String() is not implemented yet.")
+	runtimeError("This object's String() is not implemented yet.")
+	return ""
 }
 
 // IsNumber is an interface function of number boolean.

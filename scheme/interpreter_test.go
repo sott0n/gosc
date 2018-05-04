@@ -140,8 +140,8 @@ var evalErrorTests = []evalErrorTest{
 	{"(symbol->string)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
 	{"(symbol->string \"\")", "Compile Error: symbol required, but got \"\"."},
 
-	{"(car ())", "Compile Error: pair required."},
-	{"(cdr ())", "Compile Error: pair required."},
+	{"(car ())", "Compile Error: pair required, but got ()."},
+	{"(cdr ())", "Compile Error: pair required, but got ()."},
 	{"(car)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
 	{"(cdr)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
 }

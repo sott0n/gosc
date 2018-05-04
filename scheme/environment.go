@@ -4,10 +4,6 @@
 
 package scheme
 
-import (
-	"fmt"
-)
-
 // Environment is a struction for environment.
 type Environment struct {
 	parent  *Environment
@@ -36,7 +32,7 @@ func (e *Environment) Bind(identifier string, value Object) {
 // and invoke the procedure with given arguments.
 func (e *Environment) invokeProcedure(variable, arguments Object) Object {
 	if variable == nil {
-		panic("Invoke procedure for <nil> variable.")
+		runtimeError("Invoke procedure for <nil> variable.")
 	}
 
 	var identifier string
@@ -44,7 +40,7 @@ func (e *Environment) invokeProcedure(variable, arguments Object) Object {
 	case *Variable:
 		identifier = variable.(*Variable).identifier
 	default:
-		panic("Invalid application.")
+		runtimeError("Invalid application.")
 	}
 	procedure := e.boundedObject(identifier).(*Procedure)
 	return procedure.Invoke(arguments)
@@ -53,7 +49,7 @@ func (e *Environment) invokeProcedure(variable, arguments Object) Object {
 func (e *Environment) boundedObject(identifier string) Object {
 	object := e.scopedBinding()[identifier]
 	if object == nil {
-		panic(fmt.Sprintf("Unbound variable: %s", identifier))
+		runtimeError("Unbound variable: %s", identifier)
 	}
 	return e.scopedBinding()[identifier]
 }
