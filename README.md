@@ -46,7 +46,7 @@ $ gosc -h
 
 ## Syntax and Function
 
-| Type | Support | Check |
+| Type | Support | Status |
 |:-|:-|:-:|
 | Number | +, -, *, /, =, <, <=, >, >= | △ |
 | List | car, cdr, cons, list, length, memq, last, append, set-car!, set-cdr! | △ |
