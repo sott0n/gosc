@@ -27,7 +27,7 @@ func (p *Pair) Eval() Object {
 
 // String is a string function with accessing Pair.
 func (p *Pair) String() string {
-	if p.IsEmpty() {
+	if p.IsNull() {
 		return "()"
 	} else if p.IsList() {
 		length := p.ListLength()
@@ -41,21 +41,21 @@ func (p *Pair) String() string {
 	}
 }
 
-// IsEmpty is checking whether is empty is not.
-func (p *Pair) IsEmpty() bool {
+// IsNull is checking whether is empty is not.
+func (p *Pair) IsNull() bool {
 	return p.Car == nil && p.Cdr == nil
 }
 
 // IsPair is checking whether is pair or not.
 func (p *Pair) IsPair() bool {
-	return true
+	return !p.IsNull()
 }
 
 // IsList is checking whether is list or not
 func (p *Pair) IsList() bool {
 	pair := p
 	for {
-		if pair.IsEmpty() {
+		if pair.IsNull() {
 			return true
 		}
 		pair = pair.Cdr
@@ -84,7 +84,7 @@ func (p *Pair) ElementAt(index int) Object {
 
 // ListLength returns length of list.
 func (p *Pair) ListLength() int {
-	if p.IsEmpty() {
+	if p.IsNull() {
 		return 0
 	}
 	return p.Cdr.ListLength() + 1

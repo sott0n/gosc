@@ -11,6 +11,7 @@ type Object interface {
 	IsNumber() bool
 	IsBoolean() bool
 	IsProcedure() bool
+	IsNull() bool
 	IsPair() bool
 	IsList() bool
 	IsSymbol() bool
@@ -42,6 +43,11 @@ func (o *ObjectBase) IsBoolean() bool {
 
 // IsProcedure is an interface function of procedure boolean.
 func (o *ObjectBase) IsProcedure() bool {
+	return false
+}
+
+// IsNull is an interface function of procedure null boolean.
+func (o *ObjectBase) IsNull() bool {
 	return false
 }
 
