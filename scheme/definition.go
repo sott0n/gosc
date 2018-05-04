@@ -10,7 +10,7 @@ type Definition struct {
 
 // Eval is definition's eval function.
 func (d *Definition) Eval() Object {
-	TopLevel.Bind(d.variable.identifier, d.value.Eval())
+	d.environment.topLevel().Bind(d.variable.identifier, d.value.Eval())
 	return NewSymbol(d.variable.identifier)
 }
 
