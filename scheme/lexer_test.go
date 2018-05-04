@@ -89,6 +89,8 @@ func tokenTypeString(tokenType rune) string {
 		return "IdentifierToken"
 	case IntToken:
 		return "IntToken"
+	case StringToken:
+		return "StringToken"
 	default:
 		return fmt.Sprintf("%c", tokenType)
 	}
