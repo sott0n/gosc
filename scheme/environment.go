@@ -49,7 +49,7 @@ func (e *Environment) invokeProcedure(variable, arguments Object) Object {
 func (e *Environment) boundedObject(identifier string) Object {
 	object := e.scopedBinding()[identifier]
 	if object == nil {
-		runtimeError("Unbound variable: %s", identifier)
+		runtimeError("Unbound variable: %s.", identifier)
 	}
 	return e.scopedBinding()[identifier]
 }

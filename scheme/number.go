@@ -26,7 +26,7 @@ func NewNumber(argument interface{}) *Number {
 			runtimeError("String conversion %s to integer failed.", argument.(string))
 		}
 	default:
-		runtimeError("Unexpected argument type for NewNumber()")
+		runtimeError("Unexpected argument type for NewNumber().")
 	}
 
 	return &Number{value: value}
