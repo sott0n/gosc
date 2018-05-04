@@ -59,6 +59,9 @@ var parserTests = []parserTest{
 	makeTest("(string-append)", "\"\""),
 	makeTest("(string-append \"a\" \" \" \"b\")", "\"a b\""),
 
+	makeTest("(string->symbol \"a\")", "a"),
+	makeTest("(symbol->string 'a)", "\"a\""),
+
 	makeTest("(number? 100)", "#t"),
 	makeTest("(number? (+ 3 (* 2 8)))", "#t"),
 	makeTest("(number? #t)", "#f"),
@@ -131,6 +134,11 @@ var evalErrorTests = []evalErrorTest{
 
 	{"(string-append #f)", "Compile Error: string required."},
 	{"(string-append 1)", "Compile Error: string required."},
+
+	{"(string->symbol)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
+	{"(string->symbol 'hello)", "Compile Error: string required."},
+	{"(symbol->string)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
+	{"(symbol->string \"\")", "Compile Error: symbol required."},
 
 	{"(car ())", "Compile Error: pair required."},
 	{"(cdr ())", "Compile Error: pair required."},
