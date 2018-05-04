@@ -13,6 +13,7 @@ type Object interface {
 	IsProcedure() bool
 	IsPair() bool
 	IsList() bool
+	IsSymbol() bool
 	IsApplication() bool
 }
 
@@ -51,6 +52,11 @@ func (o *ObjectBase) IsPair() bool {
 
 // IsList is an interface function of list boolean.
 func (o *ObjectBase) IsList() bool {
+	return false
+}
+
+// IsSymbol is an interface function of symbol boolean.
+func (o *ObjectBase) IsSymbol() bool {
 	return false
 }
 

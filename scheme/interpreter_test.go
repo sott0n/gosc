@@ -58,6 +58,17 @@ var parserTests = []parserTest{
 	makePT("(boolean? #f)", "#t"),
 	makePT("(boolean? (null? 1))", "#t"),
 
+	makePT("(pair? 1)", "#f"),
+	makePT("(pair? ())", "#t"),
+	makePT("(pair? '(1 2 3))", "#t"),
+
+	makePT("(list? 1)", "#f"),
+	makePT("(list? ())", "#t"),
+	makePT("(list? '(1 2 3))", "#t"),
+
+	makePT("(symbol? 1)", "#f"),
+	makePT("(symbol? 'hello)", "#t"),
+
 	makePT("(null? 1)", "#f"),
 	makePT("(null? ()", "#t"),
 

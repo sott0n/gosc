@@ -22,3 +22,8 @@ func (s *Symbol) Eval() Object {
 func (s *Symbol) String() string {
 	return s.identifier
 }
+
+// IsSymbol returns boolean whethre symbol or not.
+func (s *Symbol) IsSymbol() bool {
+	return true
+}
