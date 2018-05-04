@@ -35,6 +35,9 @@ var parserTests = []parserTest{
 	makePT("(/ 100 (/ 4 2))", "50"),
 	makePT("(+ (* 100 3) (/ (- 4 2) 2))", "301"),
 
+	makePT("(= 2 1)", "#f"),
+	makePT("(= (* 100 3) 300)", "#t"),
+
 	makePT("(number? 100)", "#t"),
 	makePT("(number? (+ 3 (* 2 8)))", "#t"),
 	makePT("(number? #t)", "#f"),

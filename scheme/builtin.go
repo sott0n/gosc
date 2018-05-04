@@ -9,6 +9,7 @@ var builtinProcedures = Binding{
 	"-":          NewProcedure(minus),
 	"*":          NewProcedure(multiply),
 	"/":          NewProcedure(divide),
+	"=":          NewProcedure(equal),
 	"number?":    NewProcedure(isNumber),
 	"null?":      NewProcedure(isNull),
 	"procedure?": NewProcedure(isProcedure),
@@ -103,6 +104,20 @@ func divide(arguments Object) Object {
 		list = list.Cdr
 	}
 	return NewNumber(quotient)
+}
+
+func equal(arguments Object) Object {
+	assertArgumentsMinimum(arguments, 2)
+
+	list := arguments.(*Pair)
+	length := list.ListLength()
+	firstNumber := list.ElementAt(0).Eval().(*Number)
+	for i := 1; i < length; i++ {
+		if firstNumber.value != list.ElementAt(1).(*Number).value {
+			return NewBoolean(false)
+		}
+	}
+	return NewBoolean(true)
 }
 
 func isNumber(arguments Object) Object {
