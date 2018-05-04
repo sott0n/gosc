@@ -51,7 +51,7 @@ $ gosc -h
 | Number | +, -, *, /, =, <, <=, >, >= | △ |
 | List | car, cdr, cons, list, length, memq, last, append, set-car!, set-cdr! | △ |
 | Boolean | not, #f, #t | ○ |
-| String | string-append, symbol->string, string->symbol, string->number, number->string | × |
+| String | string-append, symbol->string, string->symbol, string->number, number->string | △ |
 | Type | number?, null?, pair?, list?, symbol?, procedure?, boolean?, string? | ○ |
 | Comparison | eq?, neq?, equal? | △ |
 | Syntax | lambda, let, let*, letrec | × |
