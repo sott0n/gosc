@@ -46,6 +46,12 @@ var parserTests = []parserTest{
 	makePT("(procedure? 1)", "#f"),
 	makePT("(procedure? +)", "#t"),
 
+	makePT("(boolean? 1)", "#f"),
+	makePT("(boolean? ())", "#f"),
+	makePT("(boolean? #t)", "#t"),
+	makePT("(boolean? #f)", "#t"),
+	makePT("(boolean? (null? 1))", "#t"),
+
 	makePT("(null? 1)", "#f"),
 	makePT("(null? ()", "#t"),
 

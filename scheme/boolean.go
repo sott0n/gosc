@@ -25,7 +25,7 @@ func NewBoolean(value interface{}) *Boolean {
 	return nil
 }
 
-// Eval is boolean IF.
+// Eval is boolean's eval IF.
 func (b *Boolean) Eval() Object {
 	return b
 }
@@ -35,4 +35,9 @@ func (b *Boolean) String() string {
 		return "#t"
 	}
 	return "#f"
+}
+
+// IsBoolean is boolean IF.
+func (b *Boolean) IsBoolean() bool {
+	return true
 }
