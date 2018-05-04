@@ -74,7 +74,7 @@ func evaledObjects(objects []Object) []Object {
 	return evaledObjects
 }
 
-func typeCheckResult(arguments Object, typeCheckFunc func(Object) bool) Object {
+func booleanByFunc(arguments Object, typeCheckFunc func(Object) bool) Object {
 	assertListEqual(arguments, 1)
 
 	object := arguments.(*Pair).ElementAt(0).Eval()
@@ -149,58 +149,58 @@ func equal(arguments Object) Object {
 }
 
 func isNumber(arguments Object) Object {
-	return typeCheckResult(arguments, func(object Object) bool {
+	return booleanByFunc(arguments, func(object Object) bool {
 		return object.IsNumber()
 	})
 }
 
 func isNull(arguments Object) Object {
-	return typeCheckResult(arguments, func(object Object) bool {
+	return booleanByFunc(arguments, func(object Object) bool {
 		return object.IsNull()
 	})
 }
 
 func isProcedure(arguments Object) Object {
-	return typeCheckResult(arguments, func(object Object) bool {
+	return booleanByFunc(arguments, func(object Object) bool {
 		return object.IsProcedure()
 	})
 }
 
 func isBoolean(arguments Object) Object {
-	return typeCheckResult(arguments, func(object Object) bool {
+	return booleanByFunc(arguments, func(object Object) bool {
 		return object.IsBoolean()
 	})
 }
 
 func isPair(arguments Object) Object {
-	return typeCheckResult(arguments, func(object Object) bool {
+	return booleanByFunc(arguments, func(object Object) bool {
 		return object.IsPair()
 	})
 }
 
 func isList(arguments Object) Object {
-	return typeCheckResult(arguments, func(object Object) bool {
+	return booleanByFunc(arguments, func(object Object) bool {
 		return object.IsList()
 	})
 }
 
 func isSymbol(arguments Object) Object {
-	return typeCheckResult(arguments, func(object Object) bool {
+	return booleanByFunc(arguments, func(object Object) bool {
 		return object.IsSymbol()
 	})
 }
 
 func isString(arguments Object) Object {
-	return typeCheckResult(arguments, func(object Object) bool {
+	return booleanByFunc(arguments, func(object Object) bool {
 		return object.IsString()
 	})
 }
 
 func not(arguments Object) Object {
-	assertListEqual(arguments, 1)
-
-	object := arguments.(*Pair).ElementAt(0).Eval()
-	return NewBoolean(object.IsBoolean() && !object.(*Boolean).value)
+	return booleanByFunc(arguments,
+		func(object Object) bool {
+			return object.IsBoolean() && !object.(*Boolean).value
+		})
 }
 
 func car(arguments Object) Object {
