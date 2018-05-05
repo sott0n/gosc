@@ -15,7 +15,7 @@ import (
 type Options struct {
 	FileName   string   `short:"f" long:"file" description:"interpret selected scheme source file"`
 	Expression []string `short:"e" long:"expression" description:"execute given expression"`
-	DumpAST    bool     `short:"a" long:"ast" default:"false" description:"whether leafnodes are plotte"`
+	DumpAST    bool     `short:"a" long:"ast" description:"whether leaf nodes are plotted"`
 }
 
 func main() {
@@ -46,6 +46,8 @@ func executeExpression(expression string, dumpAST bool) {
 }
 
 func repl(options *Options) {
+	mainInterpreter := scheme.NewInterpreter("")
+
 	for {
 		indentLevel := 0
 		expression := ""
@@ -65,7 +67,8 @@ func repl(options *Options) {
 			interpreter := scheme.NewInterpreter(expression)
 			indentLevel = interpreter.IndentLevel()
 			if indentLevel == 0 {
-				executeExpression(expression, options.DumpAST)
+				mainInterpreter.ReloadSourceCode(expression)
+				mainInterpreter.PrintResult(options.DumpAST)
 				break
 			} else if indentLevel < 0 {
 				fmt.Println("*** ERROR: extra close parentheses.")

@@ -26,6 +26,11 @@ func NewInterpreter(source string) *Interpreter {
 	return interpreter
 }
 
+// ReloadSourceCode is to load new source code with current environment.
+func (i *Interpreter) ReloadSourceCode(source string) {
+	i.Parser = NewParser(source)
+}
+
 // PrintResult is a function to print result of Eval.
 func (i *Interpreter) PrintResult(dumpAST bool) {
 	for _, result := range i.Eval(dumpAST) {
