@@ -6,81 +6,120 @@ package scheme
 
 // Object is an abstruct class for scheme object.
 type Object interface {
+	Parent() Object
+	setParent(Object)
 	Eval() Object
 	String() string
-	IsNumber() bool
-	IsBoolean() bool
-	IsProcedure() bool
-	IsNull() bool
-	IsPair() bool
-	IsList() bool
-	IsSymbol() bool
-	IsString() bool
-	IsVariable() bool
-	IsApplication() bool
+	isNumber() bool
+	isBoolean() bool
+	isProcedure() bool
+	isNull() bool
+	isPair() bool
+	isList() bool
+	isSymbol() bool
+	isString() bool
+	isVariable() bool
+	isApplication() bool
+	bind(string, Object)
+	scopedBinding() Binding
+	binding() Binding
+	boundedObject(string) Object
 }
+
+// Binding is an abstruct type for binding.
+type Binding map[string]Object
 
 // ObjectBase is an abstruct class for base scheme object.
 type ObjectBase struct {
+	parent Object
 }
 
 // Eval is object's eval IF.
 func (o *ObjectBase) Eval() Object {
-	runtimeError("This type's String() is not implemented yet.")
+	runtimeError("This type's String() is not implemented yet")
 	return nil
 }
 
 func (o *ObjectBase) String() string {
-	runtimeError("This object's String() is not implemented yet.")
+	runtimeError("This object's String() is not implemented yet")
 	return ""
 }
 
-// IsNumber is an interface function of number boolean.
-func (o *ObjectBase) IsNumber() bool {
+func (o *ObjectBase) isNumber() bool {
 	return false
 }
 
-// IsBoolean is an interface function of boolean.
-func (o *ObjectBase) IsBoolean() bool {
+func (o *ObjectBase) isBoolean() bool {
 	return false
 }
 
-// IsProcedure is an interface function of procedure boolean.
-func (o *ObjectBase) IsProcedure() bool {
+func (o *ObjectBase) isProcedure() bool {
 	return false
 }
 
-// IsNull is an interface function of procedure null boolean.
-func (o *ObjectBase) IsNull() bool {
+func (o *ObjectBase) isNull() bool {
 	return false
 }
 
-// IsPair is an interface function of pair boolean.
-func (o *ObjectBase) IsPair() bool {
+func (o *ObjectBase) isPair() bool {
 	return false
 }
 
-// IsList is an interface function of list boolean.
-func (o *ObjectBase) IsList() bool {
+func (o *ObjectBase) isList() bool {
 	return false
 }
 
-// IsVariable is an interface function of variable boolean.
-func (o *ObjectBase) IsVariable() bool {
+func (o *ObjectBase) isVariable() bool {
 	return false
 }
 
-// IsSymbol is an interface function of symbol boolean.
-func (o *ObjectBase) IsSymbol() bool {
+func (o *ObjectBase) isSymbol() bool {
 	return false
 }
 
-// IsString is an interface function of string boolean.
-func (o *ObjectBase) IsString() bool {
+func (o *ObjectBase) isString() bool {
 	return false
 }
 
-// IsApplication is an interface function of application boolean.
-func (o *ObjectBase) IsApplication() bool {
+func (o *ObjectBase) isApplication() bool {
 	return false
+}
+
+func (o *ObjectBase) binding() Binding {
+	return Binding{}
+}
+
+// Parent is an abstruct function for accessing parent.
+func (o *ObjectBase) Parent() Object {
+	return o.parent
+}
+
+func (o *ObjectBase) setParent(parent Object) {
+	o.parent = parent
+}
+
+func (o *ObjectBase) scopedBinding() (scopedBinding Binding) {
+	scopedBinding = make(Binding)
+	parent := o.Parent()
+
+	for parent != nil {
+		for identifier, object := range parent.binding() {
+			if scopedBinding[identifier] == nil {
+				scopedBinding[identifier] = object
+			}
+		}
+		parent = parent.Parent()
+	}
+	return
+}
+
+func (o *ObjectBase) bind(identifier string, object Object) {
+	if o.parent == nil {
+		runtimeError("Bind called for object whose parent is nil")
+	}
+	o.Parent().bind(identifier, object)
+}
+
+func (o *ObjectBase) boundedObject(identifier string) Object {
+	return o.scopedBinding()[identifier]
 }

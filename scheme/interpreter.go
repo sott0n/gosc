@@ -12,18 +12,14 @@ import (
 
 // Interpreter is a struction for interpreter.
 type Interpreter struct {
+	ObjectBase
 	*Parser
-	topLevel *Environment
+	topLevel Binding
 }
 
 // NewInterpreter is a struction for definition of new interpreter.
 func NewInterpreter(source string) *Interpreter {
-	interpreter := &Interpreter{Parser: NewParser(source)}
-	interpreter.topLevel = &Environment{
-		parent:  nil,
-		binding: BuiltinProcedures(),
-	}
-	return interpreter
+	return &Interpreter{Parser: NewParser(source), topLevel: BuiltinProcedures()}
 }
 
 // ReloadSourceCode is to load new source code with current environment.
@@ -33,13 +29,13 @@ func (i *Interpreter) ReloadSourceCode(source string) {
 
 // PrintResult is a function to print result of Eval.
 func (i *Interpreter) PrintResult(dumpAST bool) {
-	for _, result := range i.Eval(dumpAST) {
+	for _, result := range i.EvalSource(dumpAST) {
 		fmt.Println(result)
 	}
 }
 
-// Eval is a struction to eval on interpreter.
-func (i *Interpreter) Eval(dumpAST bool) (results []string) {
+// EvalSource is a struction to eval on interpreter.
+func (i *Interpreter) EvalSource(dumpAST bool) (results []string) {
 	defer func() {
 		if err := recover(); err != nil {
 			results = append(results, fmt.Sprintf("*** ERROR: %s", err))
@@ -47,7 +43,7 @@ func (i *Interpreter) Eval(dumpAST bool) (results []string) {
 	}()
 
 	for i.Peek() != scanner.EOF {
-		expression := i.Parser.Parse(i.topLevel)
+		expression := i.Parser.Parse(i)
 		if dumpAST {
 			i.DumpAST(expression, 0)
 		}
@@ -60,6 +56,18 @@ func (i *Interpreter) Eval(dumpAST bool) (results []string) {
 	return
 }
 
+func (i *Interpreter) bind(identifier string, object Object) {
+	i.topLevel[identifier] = object
+}
+
+func (i *Interpreter) binding() Binding {
+	return i.topLevel
+}
+
+func (i *Interpreter) scopedBinding() Binding {
+	return i.topLevel
+}
+
 // DumpAST is a defining of dumping abstrct tree.
 func (i *Interpreter) DumpAST(object Object, indentLevel int) {
 	if object == nil {
@@ -68,7 +76,7 @@ func (i *Interpreter) DumpAST(object Object, indentLevel int) {
 	switch object.(type) {
 	case *Application:
 		i.printWithIndent("Application", indentLevel)
-		i.DumpAST(object.(*Application).procedureVariable, indentLevel+1)
+		i.DumpAST(object.(*Application).procedure, indentLevel+1)
 		i.DumpAST(object.(*Application).arguments, indentLevel+1)
 	case *Pair:
 		pair := object.(*Pair)

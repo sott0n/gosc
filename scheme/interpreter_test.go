@@ -118,35 +118,35 @@ var interpreterTests = []interpreterTest{
 }
 
 var evalErrorTests = []evalErrorTest{
-	{"(1)", "Invalid application."},
-	{"hello", "Unbound variable: hello."},
-	{"(quote)", "Compile Error: syntax-error: malformed quote."},
-	{"(define)", "Compile Error: syntax-error: (define)."},
+	{"(1)", "Invalid application"},
+	{"hello", "Unbound variable: hello"},
+	{"(quote)", "Compile Error: syntax-error: malformed quote"},
+	{"(define)", "Compile Error: syntax-error: (define)"},
 
-	{"(-)", "Compile Error: procedure requires at least 1 arguments."},
-	{"(/)", "Compile Error: procedure requires at least 1 arguments."},
-	{"(number?)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
-	{"(null?)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
-	{"(null? 1 2)", "Compile Error: Wrong number of arguments: number? requires 1, but got 2."},
-	{"(not)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
+	{"(-)", "Compile Error: procedure requires at least 1 arguments"},
+	{"(/)", "Compile Error: procedure requires at least 1 arguments"},
+	{"(number?)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0"},
+	{"(null?)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0"},
+	{"(null? 1 2)", "Compile Error: Wrong number of arguments: number? requires 1, but got 2"},
+	{"(not)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0"},
 
-	{"(+ 1 #t)", "Compile Error: number required, but got #t."},
-	{"(- #t)", "Compile Error: number required, but got #t."},
-	{"(* ())", "Compile Error: number required, but got ()."},
-	{"(/ '(1 2 3))", "Compile Error: number required, but got (1 2 3)."},
+	{"(+ 1 #t)", "Compile Error: number required, but got #t"},
+	{"(- #t)", "Compile Error: number required, but got #t"},
+	{"(* ())", "Compile Error: number required, but got ()"},
+	{"(/ '(1 2 3))", "Compile Error: number required, but got (1 2 3)"},
 
-	{"(string-append #f)", "Compile Error: string required, but got #f."},
-	{"(string-append 1)", "Compile Error: string required, but got 1."},
+	{"(string-append #f)", "Compile Error: string required, but got #f"},
+	{"(string-append 1)", "Compile Error: string required, but got 1"},
 
-	{"(string->symbol)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
-	{"(string->symbol 'hello)", "Compile Error: string required, but got hello."},
-	{"(symbol->string)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
-	{"(symbol->string \"\")", "Compile Error: symbol required, but got \"\"."},
+	{"(string->symbol)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0"},
+	{"(string->symbol 'hello)", "Compile Error: string required, but got hello"},
+	{"(symbol->string)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0"},
+	{"(symbol->string \"\")", "Compile Error: symbol required, but got \"\""},
 
-	{"(car ())", "Compile Error: pair required, but got ()."},
-	{"(cdr ())", "Compile Error: pair required, but got ()."},
-	{"(car)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
-	{"(cdr)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0."},
+	{"(car ())", "Compile Error: pair required, but got ()"},
+	{"(cdr ())", "Compile Error: pair required, but got ()"},
+	{"(car)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0"},
+	{"(cdr)", "Compile Error: Wrong number of arguments: number? requires 1, but got 0"},
 }
 
 func evalTest(source string, results ...string) interpreterTest {
@@ -156,7 +156,7 @@ func evalTest(source string, results ...string) interpreterTest {
 func TestInterpreter(t *testing.T) {
 	for _, test := range interpreterTests {
 		i := NewInterpreter(test.source)
-		evalResults := i.Eval(false)
+		evalResults := i.EvalSource(false)
 
 		for i := 0; i < len(test.results); i++ {
 			expect := test.results[i]
@@ -172,9 +172,9 @@ func TestEvalError(t *testing.T) {
 	for _, test := range evalErrorTests {
 		i := NewInterpreter(test.source)
 		expect := "*** ERROR: " + test.message
-		actual := i.Eval(false)[0]
+		actual := i.EvalSource(false)[0]
 		if actual != expect {
-			t.Errorf("%s\n got: %s;\nwant: %s, test.source, actual, expect")
+			t.Errorf("%s\n got: %s;\nwant: %s", test.source, actual, expect)
 		}
 	}
 }

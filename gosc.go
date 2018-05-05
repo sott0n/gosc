@@ -72,7 +72,7 @@ func repl(options *Options) {
 				mainInterpreter.PrintResult(options.DumpAST)
 				break
 			} else if indentLevel < 0 {
-				fmt.Println("*** ERROR: extra close parentheses.")
+				fmt.Println("*** ERROR: extra close parentheses")
 				expression = ""
 				indentLevel = 0
 			}
@@ -86,6 +86,6 @@ func callRepl(indentLevel int) string {
 	} else if indentLevel > 0 {
 		return fmt.Sprintf("... %s", strings.Repeat("  ", indentLevel))
 	} else {
-		panic("Negative indent level.")
+		panic("Negative indent level")
 	}
 }

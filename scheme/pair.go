@@ -15,9 +15,13 @@ import (
 // Pair is a struction for car and cdr.
 type Pair struct {
 	ObjectBase
-	Car         Object
-	Cdr         *Pair
-	environment *Environment
+	Car Object
+	Cdr *Pair
+}
+
+// NewNull is creating clear pair.
+func NewNull(parent Object) *Pair {
+	return &Pair{ObjectBase: ObjectBase{parent: parent}, Car: nil, Cdr: nil}
 }
 
 // Eval is Pair's eval IF.
@@ -27,9 +31,9 @@ func (p *Pair) Eval() Object {
 
 // String is a string function with accessing Pair.
 func (p *Pair) String() string {
-	if p.IsNull() {
+	if p.isNull() {
 		return "()"
-	} else if p.IsList() {
+	} else if p.isList() {
 		length := p.ListLength()
 		tokens := []string{}
 		for i := 0; i < length; i++ {
@@ -37,25 +41,22 @@ func (p *Pair) String() string {
 		}
 		return fmt.Sprintf("(%s)", strings.Join(tokens, " "))
 	} else {
-		return "Not implemented. (Pair.String())"
+		return "Not implemented: (Pair.String())"
 	}
 }
 
-// IsNull is checking whether is empty is not.
-func (p *Pair) IsNull() bool {
+func (p *Pair) isNull() bool {
 	return p.Car == nil && p.Cdr == nil
 }
 
-// IsPair is checking whether is pair or not.
-func (p *Pair) IsPair() bool {
-	return !p.IsNull()
+func (p *Pair) isPair() bool {
+	return !p.isNull()
 }
 
-// IsList is checking whether is list or not
-func (p *Pair) IsList() bool {
+func (p *Pair) isList() bool {
 	pair := p
 	for {
-		if pair.IsNull() {
+		if pair.isNull() {
 			return true
 		}
 		pair = pair.Cdr
@@ -84,7 +85,7 @@ func (p *Pair) ElementAt(index int) Object {
 
 // ListLength returns length of list.
 func (p *Pair) ListLength() int {
-	if p.IsNull() {
+	if p.isNull() {
 		return 0
 	}
 	return p.Cdr.ListLength() + 1

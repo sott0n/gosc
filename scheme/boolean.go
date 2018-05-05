@@ -19,7 +19,7 @@ func NewBoolean(value interface{}) *Boolean {
 		} else if value == "#f" {
 			return &Boolean{value: false}
 		} else {
-			compileError("Unexpected value for NewBoolean.")
+			compileError("Unexpected value for NewBoolean")
 		}
 	}
 	return nil
@@ -37,7 +37,6 @@ func (b *Boolean) String() string {
 	return "#f"
 }
 
-// IsBoolean is boolean IF.
-func (b *Boolean) IsBoolean() bool {
+func (b *Boolean) isBoolean() bool {
 	return true
 }

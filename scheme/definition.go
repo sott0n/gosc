@@ -3,14 +3,13 @@ package scheme
 // Definition is a type of define function.
 type Definition struct {
 	ObjectBase
-	environment *Environment
-	variable    *Variable
-	value       Object
+	variable *Variable
+	value    Object
 }
 
 // Eval is definition's eval function.
 func (d *Definition) Eval() Object {
-	d.environment.topLevel().Bind(d.variable.identifier, d.value.Eval())
+	d.bind(d.variable.identifier, d.value.Eval())
 	return NewSymbol(d.variable.identifier)
 }
 

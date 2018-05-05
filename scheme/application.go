@@ -7,9 +7,8 @@ package scheme
 // Application is a struction for application.
 type Application struct {
 	ObjectBase
-	procedureVariable Object
-	arguments         Object // expect *Pair
-	environment       *Environment
+	procedure Object
+	arguments Object
 }
 
 // Eval is eval function IF that returns applyProcedure.
@@ -20,19 +19,20 @@ func (a *Application) Eval() Object {
 func (a *Application) String() string {
 	result := a.Eval()
 	if result == nil {
-		compileError("Procedure application returns nil.")
+		compileError("Procedure application returns nil")
 	}
 	return result.String()
 }
 
 func (a *Application) applyProcedure() Object {
-	if a.environment == nil {
-		compileError("Procedure does not have environment.")
+	evaledObject := a.procedure.Eval()
+	if !evaledObject.isProcedure() {
+		runtimeError("Invalid application")
 	}
-	return a.environment.invokeProcedure(a.procedureVariable, a.arguments)
+	procedure := evaledObject.(*Procedure)
+	return procedure.Invoke(a.arguments)
 }
 
-// IsApplication is checking boolean wether is application or not.
-func (a *Application) IsApplication() bool {
+func (a *Application) isApplication() bool {
 	return true
 }
