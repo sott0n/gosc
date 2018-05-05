@@ -46,6 +46,7 @@ func executeExpression(expression string, dumpAST bool) {
 }
 
 func repl(options *Options) {
+	fmt.Println(">>> REPL of gosc is running...")
 	mainInterpreter := scheme.NewInterpreter("")
 
 	for {
@@ -81,7 +82,7 @@ func repl(options *Options) {
 
 func callRepl(indentLevel int) string {
 	if indentLevel == 0 {
-		return "gosc >> "
+		return ">>> "
 	} else if indentLevel > 0 {
 		return fmt.Sprintf("... %s", strings.Repeat("  ", indentLevel))
 	} else {
