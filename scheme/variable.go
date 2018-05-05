@@ -28,3 +28,8 @@ func (v *Variable) Eval() Object {
 func (v *Variable) String() string {
 	return v.Eval().String()
 }
+
+// IsVariable returns boolean whether variable or not.
+func (v *Variable) IsVariable() bool {
+	return true
+}

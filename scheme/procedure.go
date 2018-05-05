@@ -18,9 +18,33 @@ type Procedure struct {
 
 // NewProcedure is a function for definition a new procedure.
 func NewProcedure(environment *Environment, arguments Object, body Object) *Procedure {
-	function := func(Object) Object {
-		var returnValue Object
+	// Create new local environmnet which has the same binding with procedure generated place.
+	localEnvironment := &Environment{parent: nil, binding: environment.ScopedBinding()}
 
+	function := func(givenArguments Object) Object {
+		if !arguments.IsList() || !givenArguments.IsList() {
+			runtimeError("Given non-list arguments.")
+		}
+
+		// assert arguments count.
+		expectedLength := arguments.(*Pair).ListLength()
+		actualLength := givenArguments.(*Pair).ListLength()
+		if expectedLength != actualLength {
+			compileError("Wrong number of arguments: #f requires %d, but got %d.",
+				expectedLength, actualLength)
+		}
+
+		// binding arguments to local scope.
+		parameters := arguments.(*Pair).Elements()
+		objects := evaledObjects(givenArguments.(*Pair).Elements())
+		for i, parameter := range parameters {
+			if parameter.IsVariable() {
+				localEnvironment.Bind(parameter.(*Variable).identifier, objects[i])
+			}
+		}
+
+		// returns last eval result.
+		var returnValue Object
 		elements := body.(*Pair).Elements()
 		for _, element := range elements {
 			returnValue = element.Eval()
@@ -29,7 +53,7 @@ func NewProcedure(environment *Environment, arguments Object, body Object) *Proc
 	}
 
 	return &Procedure{
-		environment: environment,
+		environment: localEnvironment,
 		function:    function,
 		arguments:   arguments,
 		body:        body,
