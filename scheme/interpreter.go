@@ -83,7 +83,7 @@ func (i *Interpreter) DumpAST(object Object, indentLevel int) {
 		if pair.Car == nil && pair.Cdr == nil {
 			return
 		}
-		i.printWithIndent("Pair", indentLevel)
+		i.printWithIndent(fmt.Sprintf("Pair, ances: %#v", object.ancestor()), indentLevel)
 		i.DumpAST(pair.Car, indentLevel+1)
 		i.DumpAST(pair.Cdr, indentLevel+1)
 	case *Number:
@@ -91,7 +91,9 @@ func (i *Interpreter) DumpAST(object Object, indentLevel int) {
 	case *Boolean:
 		i.printWithIndent(fmt.Sprintf("Boolean(%s)", object), indentLevel)
 	case *Variable:
-		i.printWithIndent(fmt.Sprintf("Variable(%s)", object.(*Variable).identifier), indentLevel)
+		i.printWithIndent(
+			fmt.Sprintf(
+				"Variable(%s), ances: %#v", object.(*Variable).identifier, object.ancestor()), indentLevel)
 	case *Definition:
 		i.printWithIndent("Difinition", indentLevel)
 		i.DumpAST(object.(*Definition).variable, indentLevel+1)

@@ -40,7 +40,7 @@ func assertListMinimum(arguments Object, minimum int) {
 	if !arguments.isList() {
 		compileError("proper list required for function application or macro use")
 	} else if arguments.(*Pair).ListLength() < minimum {
-		compileError("procedure requires at least %d arguments", minimum)
+		compileError("procedure requires at least %d argument", minimum)
 	}
 }
 
