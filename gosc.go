@@ -81,7 +81,7 @@ func repl(options *Options) {
 
 func callRepl(indentLevel int) string {
 	if indentLevel == 0 {
-		return "gosc>> "
+		return "gosc >> "
 	} else if indentLevel > 0 {
 		return fmt.Sprintf("... %s", strings.Repeat("  ", indentLevel))
 	} else {
