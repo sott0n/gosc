@@ -13,34 +13,46 @@ import (
 // Interpreter is a struction for interpreter.
 type Interpreter struct {
 	*Parser
+	topLevel *Environment
 }
 
 // NewInterpreter is a struction for definition of new interpreter.
 func NewInterpreter(source string) *Interpreter {
-	return &Interpreter{NewParser(source)}
+	interpreter := &Interpreter{Parser: NewParser(source)}
+	interpreter.topLevel = &Environment{
+		parent:  nil,
+		binding: BuiltinProcedures(),
+	}
+	return interpreter
+}
+
+// PrintResult is a function to print result of Eval.
+func (i *Interpreter) PrintResult(dumpAST bool) {
+	for _, result := range i.Eval(dumpAST) {
+		fmt.Println(result)
+	}
 }
 
 // Eval is a struction to eval on interpreter.
-func (i *Interpreter) Eval(dumpAST bool) {
-	defer i.ensureAvailability()
+func (i *Interpreter) Eval(dumpAST bool) (results []string) {
+	defer func() {
+		if err := recover(); err != nil {
+			results = append(results, fmt.Sprintf("*** ERROR: %s", err))
+		}
+	}()
 
 	for i.Peek() != scanner.EOF {
-		expression := i.Parser.Parse()
+		expression := i.Parser.Parse(i.topLevel)
 		if dumpAST {
 			i.DumpAST(expression, 0)
 		}
 
-		if expression != nil {
+		if expression == nil {
 			return
 		}
-		fmt.Println(expression.Eval())
+		results = append(results, expression.Eval().String())
 	}
-}
-
-func (i *Interpreter) ensureAvailability() {
-	if err := recover(); err != nil {
-		fmt.Println("*** ERROR:", err)
-	}
+	return
 }
 
 // DumpAST is a defining of dumping abstrct tree.

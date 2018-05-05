@@ -17,9 +17,9 @@ func NewParser(source string) *Parser {
 }
 
 // Parse is a function to deal parser.
-func (p Parser) Parse() Object {
+func (p Parser) Parse(environment *Environment) Object {
 	p.ensureAvailability()
-	return p.parseObject(&TopLevel)
+	return p.parseObject(environment)
 }
 
 func (p *Parser) parseObject(environment *Environment) Object {

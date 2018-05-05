@@ -13,12 +13,6 @@ type Environment struct {
 // Binding is a struction for binding.
 type Binding map[string]Object
 
-// TopLevel is a setting environment.
-var TopLevel = Environment{
-	parent:  nil,
-	binding: builtinProcedures,
-}
-
 func newEnvironment() *Environment {
 	return &Environment{}
 }
