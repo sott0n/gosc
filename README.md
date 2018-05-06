@@ -57,7 +57,7 @@ $ gosc -h
 | Syntax | lambda, let, let*, letrec | △ |
 | Statement | if, cond, and, or, begin, do | × |
 | Definition | set!, define, define-macro | △ |
-| Others | load | × |
+| Others | load | ○ |
 
 ## TODO
 
