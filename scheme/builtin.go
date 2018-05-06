@@ -29,6 +29,7 @@ func BuiltinProcedures() Binding {
 		"symbol?":        builtinProcedure(isSymbol),
 		"string?":        builtinProcedure(isString),
 		"not":            builtinProcedure(not),
+		"cons":           builtinProcedure(cons),
 		"car":            builtinProcedure(car),
 		"cdr":            builtinProcedure(cdr),
 		"list":           builtinProcedure(list),
@@ -248,6 +249,17 @@ func not(arguments Object) Object {
 		func(object Object) bool {
 			return object.isBoolean() && !object.(*Boolean).value
 		})
+}
+
+func cons(arguments Object) Object {
+	assertListEqual(arguments, 2)
+
+	objects := evaledObjects(arguments.(*Pair).Elements())
+	return &Pair{
+		ObjectBase: ObjectBase{parent: arguments.Parent()},
+		Car:        objects[0],
+		Cdr:        objects[1],
+	}
 }
 
 func car(arguments Object) Object {
