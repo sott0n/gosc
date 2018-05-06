@@ -45,7 +45,9 @@ func (i *Interpreter) EvalSource(dumpAST bool) (results []string) {
 	for i.Peek() != scanner.EOF {
 		expression := i.Parser.Parse(i)
 		if dumpAST {
+			fmt.Printf("*** AST ***\n")
 			i.DumpAST(expression, 0)
+			fmt.Printf("\n*** Result ***\n")
 		}
 
 		if expression == nil {
@@ -83,7 +85,7 @@ func (i *Interpreter) DumpAST(object Object, indentLevel int) {
 		if pair.Car == nil && pair.Cdr == nil {
 			return
 		}
-		i.printWithIndent(fmt.Sprintf("Pair, ancestor: %T", object.ancestor()), indentLevel)
+		i.printWithIndent("Pair", indentLevel)
 		i.DumpAST(pair.Car, indentLevel+1)
 		i.DumpAST(pair.Cdr, indentLevel+1)
 	case *String:
@@ -93,9 +95,7 @@ func (i *Interpreter) DumpAST(object Object, indentLevel int) {
 	case *Boolean:
 		i.printWithIndent(fmt.Sprintf("Boolean(%s)", object), indentLevel)
 	case *Variable:
-		i.printWithIndent(
-			fmt.Sprintf(
-				"Variable(%s), ancestor: %T", object.(*Variable).identifier, object.ancestor()), indentLevel)
+		i.printWithIndent(fmt.Sprintf("Variable(%s)", object.(*Variable).identifier), indentLevel)
 	case *Definition:
 		i.printWithIndent("Difinition", indentLevel)
 		i.DumpAST(object.(*Definition).variable, indentLevel+1)
