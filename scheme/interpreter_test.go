@@ -105,6 +105,10 @@ var interpreterTests = []interpreterTest{
 	evalTest("(list 1 2 3)", "(1 2 3)"),
 	evalTest("(cdr (list 1 2 3))", "(2 3)"),
 
+	evalTest("(length ())", "0"),
+	evalTest("(length '(1 2))", "2"),
+	evalTest("(length (list 1 '(2 3) 4))", "3"),
+
 	evalTest("(string-append)", "\"\""),
 	evalTest("(string-append \"a\" \" \" \"b\")", "\"a b\""),
 
@@ -194,6 +198,8 @@ var runtimeErrorTests = []interpreterTest{
 	evalTest("(1)", "*** ERROR: Invalid application"),
 	evalTest("hello", "*** ERROR: Unbound variable: hello"),
 	evalTest("((lambda (x) (define y 1) 1) 1) y", "1", "*** ERROR: Unbound variable: y"),
+
+	evalTest("'1'", "1", "*** ERROR: unterminated quote"),
 }
 
 var compileErrorTests = []interpreterTest{
@@ -230,7 +236,7 @@ var compileErrorTests = []interpreterTest{
 
 	evalTest("((lambda (x) (define y 1) 1) 1) y", "1", "*** ERROR: Unbound variable: y"),
 
-	evalTest("'1'", "1", "*** ERROR: unterminated quote"),
+	evalTest("(length (cons 1 2))", "*** ERROR: Compile Error: proper list required for functionn application or macro use"),
 }
 
 func evalTest(source string, results ...string) interpreterTest {
