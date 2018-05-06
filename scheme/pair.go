@@ -16,7 +16,7 @@ import (
 type Pair struct {
 	ObjectBase
 	Car Object
-	Cdr *Pair
+	Cdr Object
 }
 
 // NewNull is creating clear pair.
@@ -59,7 +59,7 @@ func (p *Pair) isList() bool {
 		if pair.isNull() {
 			return true
 		}
-		pair = pair.Cdr
+		pair = pair.Cdr.(*Pair)
 	}
 }
 
@@ -73,7 +73,7 @@ func (p *Pair) Elements() []Object {
 		} else {
 			elements = append(elements, pair.Car)
 		}
-		pair = pair.Cdr
+		pair = pair.Cdr.(*Pair)
 	}
 	return elements
 }
@@ -88,5 +88,5 @@ func (p *Pair) ListLength() int {
 	if p.isNull() {
 		return 0
 	}
-	return p.Cdr.ListLength() + 1
+	return p.Cdr.(*Pair).ListLength() + 1
 }
