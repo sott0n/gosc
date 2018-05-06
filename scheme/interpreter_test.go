@@ -216,6 +216,8 @@ var compileErrorTests = []interpreterTest{
 	evalTest("(cdr)", "*** ERROR: Compile Error: Wrong number of arguments: number? requires 1, but got 0"),
 
 	evalTest("((lambda (x) (define y 1) 1) 1) y", "1", "*** ERROR: Unbound variable: y"),
+
+	evalTest("'1'", "1", "*** ERROR: unterminated quote"),
 }
 
 func evalTest(source string, results ...string) interpreterTest {
