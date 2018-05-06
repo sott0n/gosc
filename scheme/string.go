@@ -12,7 +12,10 @@ type String struct {
 }
 
 // NewString is a function for difinition a new String object.
-func NewString(text string) *String {
+func NewString(text string, options ...Object) *String {
+	if len(options) > 0 {
+		return &String{ObjectBase: ObjectBase{parent: options[0]}, text: text}
+	}
 	return &String{text: text}
 }
 

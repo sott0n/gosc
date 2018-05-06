@@ -13,7 +13,7 @@ type Number struct {
 }
 
 // NewNumber is a struction for definition a new number.
-func NewNumber(argument interface{}) *Number {
+func NewNumber(argument interface{}, options ...Object) *Number {
 	var value int
 	var err error
 
@@ -29,6 +29,9 @@ func NewNumber(argument interface{}) *Number {
 		runtimeError("Unexpected argument type for NewNumber()")
 	}
 
+	if len(options) > 0 {
+		return &Number{ObjectBase: ObjectBase{parent: options[0]}, value: value}
+	}
 	return &Number{value: value}
 }
 
