@@ -53,7 +53,7 @@ $ gosc -h
 | Boolean | not, #f, #t | ○ |
 | String | string-append, symbol->string, string->symbol, string->number, number->string | △ |
 | Type | number?, null?, pair?, list?, symbol?, procedure?, boolean?, string? | ○ |
-| Comparison | eq?, neq?, equal? | △ |
+| Comparison | eq?, neq?, equal? | ○ |
 | Syntax | lambda, let, let*, letrec | △ |
 | Statement | if, cond, and, or, begin, do | × |
 | Definition | set!, define, define-macro | △ |
