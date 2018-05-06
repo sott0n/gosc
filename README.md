@@ -48,7 +48,7 @@ $ gosc -h
 
 | Type | Support | Status |
 |:-|:-|:-:|
-| Number | +, -, *, /, =, <, <=, >, >= | △ |
+| Number | +, -, *, /, =, <, <=, >, >= | ○ |
 | List | car, cdr, cons, list, length, memq, last, append, set-car!, set-cdr! | △ |
 | Boolean | not, #f, #t | ○ |
 | String | string-append, symbol->string, string->symbol, string->number, number->string | △ |
