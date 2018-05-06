@@ -113,6 +113,9 @@ var interpreterTests = []interpreterTest{
 	evalTest("(memq 'd '(a b c))", "#f"),
 	evalTest("(memq 'a (cons 'a 'b))", "(a . b)"),
 
+	evalTest("(last '(1 2 3))", "3"),
+	evalTest("(last (list 1 (+ 2 3)))", "5"),
+
 	evalTest("(string-append)", "\"\""),
 	evalTest("(string-append \"a\" \" \" \"b\")", "\"a b\""),
 
@@ -204,6 +207,7 @@ var runtimeErrorTests = []interpreterTest{
 	evalTest("((lambda (x) (define y 1) 1) 1) y", "1", "*** ERROR: Unbound variable: y"),
 
 	evalTest("'1'", "1", "*** ERROR: unterminated quote"),
+	evalTest("(last ())", "*** ERROR: pair required: ()"),
 }
 
 var compileErrorTests = []interpreterTest{
