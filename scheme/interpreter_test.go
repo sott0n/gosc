@@ -109,6 +109,10 @@ var interpreterTests = []interpreterTest{
 	evalTest("(length '(1 2))", "2"),
 	evalTest("(length (list 1 '(2 3) 4))", "3"),
 
+	evalTest("(memq (car (cons 'b 'c)) '(a b c)", "(b c)"),
+	evalTest("(memq 'd '(a b c))", "#f"),
+	evalTest("(memq 'a (cons 'a 'b))", "(a . b)"),
+
 	evalTest("(string-append)", "\"\""),
 	evalTest("(string-append \"a\" \" \" \"b\")", "\"a b\""),
 
@@ -237,6 +241,7 @@ var compileErrorTests = []interpreterTest{
 	evalTest("((lambda (x) (define y 1) 1) 1) y", "1", "*** ERROR: Unbound variable: y"),
 
 	evalTest("(length (cons 1 2))", "*** ERROR: Compile Error: proper list required for functionn application or macro use"),
+	evalTest("(memq 'a '(a b c) 1)", "*** ERROR: Compile Error: Wrong number of arguments: number? requires 2, but got 3"),
 }
 
 func evalTest(source string, results ...string) interpreterTest {
