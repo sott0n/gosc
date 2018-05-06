@@ -9,20 +9,25 @@ type Boolean struct {
 }
 
 // NewBoolean is defining Boolean object.
-func NewBoolean(value interface{}) *Boolean {
+func NewBoolean(value interface{}, options ...Object) (boolean *Boolean) {
 	switch value.(type) {
 	case bool:
-		return &Boolean{value: value.(bool)}
+		boolean = &Boolean{value: value.(bool)}
 	case string:
 		if value == "#t" {
-			return &Boolean{value: true}
+			boolean = &Boolean{value: true}
 		} else if value == "#f" {
-			return &Boolean{value: false}
+			boolean = &Boolean{value: false}
 		} else {
 			compileError("Unexpected value for NewBoolean")
 		}
+	default:
+		return nil
 	}
-	return nil
+	if len(options) > 0 {
+		boolean.parent = options[0]
+	}
+	return
 }
 
 // Eval is boolean's eval IF.
