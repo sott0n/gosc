@@ -203,6 +203,9 @@ var interpreterTests = []interpreterTest{
 		"(define y (lambda (a) (* 3 a))) "+
 		"(define z (lambda (a b) (x a) (y b))) "+
 		"(* (x 3) (y 2) (z 4 5))", "x", "y", "z", "540"),
+
+	evalTest("(define x 2) (set! x 3) x", "x", "#<undef>", "3"),
+	evalTest("(define x 4) ((lambda (x) (set! x 3) x) 2) x", "x", "3", "4"),
 }
 
 var runtimeErrorTests = []interpreterTest{
@@ -251,6 +254,7 @@ var compileErrorTests = []interpreterTest{
 	evalTest("(length (cons 1 2))", "*** ERROR: Compile Error: proper list required for functionn application or macro use"),
 	evalTest("(memq 'a '(a b c) 1)", "*** ERROR: Compile Error: Wrong number of arguments: number? requires 2, but got 3"),
 	evalTest("(append () 1 ())", "*** ERROR: Compile Error: proper list required for function application or macro use"),
+	evalTest("(set! x 1 1)", "*** ERROR: Compile Error: syntax-error: malformed set!"),
 }
 
 func evalTest(source string, results ...string) interpreterTest {
