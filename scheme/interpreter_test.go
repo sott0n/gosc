@@ -211,6 +211,12 @@ var interpreterTests = []interpreterTest{
 	evalTest("(define x (cons 3 2)) (set-cdr! x 1) x", "x", "#<undef>", "(3 . 1)"),
 	evalTest("((lambda (x) (set-car! x 1) x) (cons 2 3))", "(1 . 3)"),
 	evalTest("((lambda (x) (set-cdr! x 1) x) (cons 2 3))", "(2 . 1)"),
+
+	evalTest("(if #t 1 2)", "1"),
+	evalTest("(if #f 1 2)", "2"),
+	evalTest("(if (null? ()) 1 2)", "1"),
+	evalTest("(if (null? 3) 1)", "#<undef>"),
+	evalTest("(if (number? 3) 'num)", "num"),
 }
 
 // let parsing break tree structure, so not apply parser test.
@@ -266,7 +272,7 @@ var compileErrorTests = []interpreterTest{
 
 	evalTest("((lambda (x) (define y 1) 1) 1) y", "1", "*** ERROR: Unbound variable: y"),
 
-	evalTest("(length (cons 1 2))", "*** ERROR: Compile Error: proper list required for functionn application or macro use"),
+	evalTest("(length (cons 1 2))", "*** ERROR: Compile Error: proper list required for function application or macro use"),
 	evalTest("(memq 'a '(a b c) 1)", "*** ERROR: Compile Error: Wrong number of arguments: number? requires 2, but got 3"),
 	evalTest("(append () 1 ())", "*** ERROR: Compile Error: proper list required for function application or macro use"),
 	evalTest("(set! x 1 1)", "*** ERROR: Compile Error: syntax-error: malformed set!"),

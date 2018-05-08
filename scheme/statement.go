@@ -27,3 +27,25 @@ func (s *Set) Eval() Object {
 	s.ObjectBase.updateBinding(variable.(*Variable).identifier, value)
 	return NewSymbol("#<undef>")
 }
+
+// If is for if statement object.
+type If struct {
+	ObjectBase
+	condition Object
+	trueBody  Object
+	falseBody Object
+}
+
+// NewIf is definition of creating if statement.
+func NewIf(parent Object) *If {
+	return &If{ObjectBase: ObjectBase{parent: parent}}
+}
+
+// Eval is IF of If statement's eval.
+func (i *If) Eval() Object {
+	result := i.condition.Eval()
+	if result.isBoolean() && result.(*Boolean).value {
+		return i.trueBody.Eval()
+	}
+	return i.falseBody.Eval()
+}
