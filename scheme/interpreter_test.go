@@ -277,7 +277,7 @@ func evalTest(source string, results ...string) interpreterTest {
 }
 
 func runTests(t *testing.T, tests []interpreterTest) {
-	for _, test := range interpreterTests {
+	for _, test := range tests {
 		i := NewInterpreter(test.source)
 		evalResults := i.EvalSource(false)
 
