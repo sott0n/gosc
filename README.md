@@ -55,7 +55,7 @@ $ gosc -h
 | Type | number?, null?, pair?, list?, symbol?, procedure?, boolean?, string? | ○ |
 | Comparison | eq?, neq?, equal? | ○ |
 | Syntax | lambda, let, let*, letrec | △ |
-| Statement | if, cond, and, or, begin, do | × |
+| Statement | if, cond, and, or, begin, do | △ |
 | Definition | set!, define, define-macro | △ |
 | Others | load | ○ |
 
