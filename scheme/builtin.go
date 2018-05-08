@@ -361,7 +361,7 @@ func appendList(arguments Object) Object {
 
 	appendedList := NewNull(arguments)
 	for _, element := range elements {
-		appendedList = appendedList.Append(element)
+		appendedList = appendedList.AppendList(element)
 	}
 	return appendedList
 }

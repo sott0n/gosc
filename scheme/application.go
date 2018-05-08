@@ -11,6 +11,13 @@ type Application struct {
 	arguments Object
 }
 
+// NewApplication is creating new object for application.
+func NewApplication(parent Object) *Application {
+	return &Application{
+		ObjectBase: ObjectBase{parent: parent},
+	}
+}
+
 // Eval is eval function IF that returns applyProcedure.
 func (a *Application) Eval() Object {
 	return a.applyProcedure()

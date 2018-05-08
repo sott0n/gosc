@@ -47,6 +47,9 @@ func (p *Parser) parseObject(parent Object) Object {
 		} else if peekToken == "lambda" {
 			p.NextToken()
 			return p.parseProcedure(parent)
+		} else if peekToken == "let" || peekToken == "let*" || peekToken == "letrec" {
+			p.NextToken()
+			return p.parseList(parent)
 		} else if peekToken == "set!" {
 			p.NextToken()
 			set := NewSet(parent)
@@ -90,9 +93,7 @@ func (p *Parser) parseList(parent Object) Object {
 }
 
 func (p *Parser) parseApplication(parent Object) Object {
-	application := &Application{
-		ObjectBase: ObjectBase{parent: parent},
-	}
+	application := NewApplication(parent)
 	application.procedure = p.parseObject(application)
 	application.arguments = p.parseList(application)
 
@@ -102,14 +103,47 @@ func (p *Parser) parseApplication(parent Object) Object {
 func (p *Parser) parseProcedure(parent Object) Object {
 	if p.TokenType() == '(' {
 		p.NextToken()
-		procedure := new(Procedure)
-		procedure.arguments = p.parseList(procedure)
-		procedure.body = p.parseList(procedure)
-		procedure.generateFunction(parent)
-		return procedure
+	} else {
+		compileError("syntax-error: malformed lambda")
 	}
-	runtimeError("Not implemented yet")
-	return nil
+
+	procedure := new(Procedure)
+	procedure.arguments = p.parseList(procedure)
+	procedure.body = p.parseList(procedure)
+	procedure.generateFunction(parent)
+	return procedure
+}
+
+func (p *Parser) parseLet(parent Object) Object {
+	if p.TokenType() == '(' {
+		p.NextToken()
+	} else {
+		compileError("syntax-error: malformed let")
+	}
+
+	application := NewApplication(parent)
+	procedure := new(Procedure)
+
+	procedureArguments := NewNull(procedure)
+	applicationArguments := NewNull(application)
+
+	argumentSets := p.parseList(application)
+	for _, set := range argumentSets.(*Pair).Elements() {
+		if !set.isApplication() || set.(*Application).arguments.(*Pair).ListLength() != 1 {
+			compileError("syntax-error: malformed let")
+		}
+
+		procedureArguments.Append(set.(*Application).procedure)
+		applicationArguments.Append(set.(*Application).arguments.(*Pair).ElementAt(0))
+	}
+
+	procedure.arguments = procedureArguments
+	procedure.body = p.parseList(application)
+	procedure.generateFunction(parent)
+
+	application.arguments = applicationArguments
+	application.procedure = procedure
+	return application
 }
 
 func (p *Parser) parseDefinition(parent Object) Object {
