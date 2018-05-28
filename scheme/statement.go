@@ -89,3 +89,49 @@ func (c *Cond) Eval() Object {
 	}
 	return lastResult
 }
+
+// And is a struct for and statement.
+type And struct {
+	ObjectBase
+	body Object
+}
+
+// NewAnd is a new object for and syntax.
+func NewAnd(parent Object) *And {
+	return &And{ObjectBase: ObjectBase{parent: parent}}
+}
+
+// Eval is evaluation for and syntax.
+func (a *And) Eval() Object {
+	lastResult := Object(NewBoolean(true))
+	for _, object := range a.body.(*Pair).Elements() {
+		lastResult = object.Eval()
+		if lastResult.isBoolean() && lastResult.(*Boolean).value == false {
+			return NewBoolean(false)
+		}
+	}
+	return lastResult
+}
+
+// Or is a struct for or statement.
+type Or struct {
+	ObjectBase
+	body Object
+}
+
+// NewOr is a new object for or syntax.
+func NewOr(parent Object) *Or {
+	return &Or{ObjectBase: ObjectBase{parent: parent}}
+}
+
+// Eval is evaluation for or syntax.
+func (o *Or) Eval() Object {
+	lastResult := Object(NewBoolean(false))
+	for _, object := range o.body.(*Pair).Elements() {
+		lastResult = object.Eval()
+		if !lastResult.isBoolean() || lastResult.(*Boolean).value != false {
+			return lastResult
+		}
+	}
+	return lastResult
+}
