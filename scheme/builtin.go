@@ -48,6 +48,8 @@ func BuiltinProcedures() Binding {
 		"neq?":           builtinProcedure(isNeq),
 		"equal?":         builtinProcedure(isEqual),
 		"load":           builtinProcedure(load),
+		"write":          builtinProcedure(writeProc),
+		"print":          builtinProcedure(printProc),
 	}
 }
 
@@ -497,4 +499,20 @@ func load(arguments Object) Object {
 		}
 	}
 	return NewBoolean(true)
+}
+
+func writeProc(arguments Object) Object {
+	assertListEqual(arguments, 1) // TODO: accept output port
+
+	object := arguments.(*Pair).ElementAt(0).Eval()
+	fmt.Printf("%s", object)
+	return NewSymbol("#<undef>")
+}
+
+func printProc(arguments Object) Object {
+	assertListEqual(arguments, 1) // TODO: accept output port
+
+	object := arguments.(*Pair).ElementAt(0).Eval()
+	fmt.Printf("%s\n", object)
+	return NewSymbol("#<undef>")
 }
