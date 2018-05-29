@@ -8,48 +8,46 @@ import (
 	"strings"
 )
 
-// BuiltinProcedures is lists of procedure binded.
+// BuiltinProcedures has some symbols builtined.
 func BuiltinProcedures() Binding {
 	return Binding{
-		"+":              builtinProcedure(plus),
-		"-":              builtinProcedure(minus),
-		"*":              builtinProcedure(multiply),
-		"/":              builtinProcedure(divide),
-		"=":              builtinProcedure(equal),
-		"<":              builtinProcedure(lessThan),
-		"<=":             builtinProcedure(lessEqual),
-		">":              builtinProcedure(greaterThan),
-		">=":             builtinProcedure(greaterEqual),
-		"number?":        builtinProcedure(isNumber),
-		"null?":          builtinProcedure(isNull),
-		"procedure?":     builtinProcedure(isProcedure),
-		"boolean?":       builtinProcedure(isBoolean),
-		"pair?":          builtinProcedure(isPair),
-		"list?":          builtinProcedure(isList),
-		"symbol?":        builtinProcedure(isSymbol),
-		"string?":        builtinProcedure(isString),
-		"not":            builtinProcedure(not),
-		"cons":           builtinProcedure(cons),
-		"car":            builtinProcedure(car),
-		"cdr":            builtinProcedure(cdr),
-		"set-car!":       builtinProcedure(setCar),
-		"set-cdr!":       builtinProcedure(setCdr),
-		"list":           builtinProcedure(list),
-		"length":         builtinProcedure(length),
-		"memq":           builtinProcedure(memq),
-		"last":           builtinProcedure(last),
-		"append":         builtinProcedure(appendList),
-		"string-append":  builtinProcedure(stringAppend),
-		"symbol->string": builtinProcedure(symbolToString),
-		"string->symbol": builtinProcedure(stringToSymbol),
-		"number->string": builtinProcedure(numberToString),
-		"string->number": builtinProcedure(stringToNumber),
-		"eq?":            builtinProcedure(isEq),
-		"neq?":           builtinProcedure(isNeq),
-		"equal?":         builtinProcedure(isEqual),
-		"load":           builtinProcedure(load),
-		"write":          builtinProcedure(writeProc),
-		"print":          builtinProcedure(printProc),
+		"+":              builtinProcedure(plusProc),
+		"-":              builtinProcedure(minusProc),
+		"*":              builtinProcedure(multiplyProc),
+		"/":              builtinProcedure(divideProc),
+		"=":              builtinProcedure(equalProc),
+		"<":              builtinProcedure(lessThanProc),
+		"<=":             builtinProcedure(lessEqualProc),
+		">":              builtinProcedure(greaterThanProc),
+		">=":             builtinProcedure(greaterEqualProc),
+		"number?":        builtinProcedure(isNumberProc),
+		"null?":          builtinProcedure(isNullProc),
+		"procedure?":     builtinProcedure(isProcedureProc),
+		"boolean?":       builtinProcedure(isBooleanProc),
+		"pair?":          builtinProcedure(isPairProc),
+		"list?":          builtinProcedure(isListProc),
+		"symbol?":        builtinProcedure(isSymbolProc),
+		"string?":        builtinProcedure(isStringProc),
+		"not":            builtinProcedure(notProc),
+		"cons":           builtinProcedure(consProc),
+		"car":            builtinProcedure(carProc),
+		"cdr":            builtinProcedure(cdrProc),
+		"set-car!":       builtinProcedure(setCarProc),
+		"set-cdr!":       builtinProcedure(setCdrProc),
+		"list":           builtinProcedure(listProc),
+		"length":         builtinProcedure(lengthProc),
+		"memq":           builtinProcedure(memqProc),
+		"last":           builtinProcedure(lastProc),
+		"append":         builtinProcedure(appendProc),
+		"string-append":  builtinProcedure(stringAppendProc),
+		"symbol->string": builtinProcedure(symbolToStringProc),
+		"string->symbol": builtinProcedure(stringToSymbolProc),
+		"number->string": builtinProcedure(numberToStringProc),
+		"string->number": builtinProcedure(stringToNumberProc),
+		"eq?":            builtinProcedure(isEqProc),
+		"neq?":           builtinProcedure(isNeqProc),
+		"equal?":         builtinProcedure(isEqualProc),
+		"load":           builtinProcedure(loadProc),
 	}
 }
 
@@ -69,7 +67,7 @@ func assertListEqual(arguments Object, length int) {
 	if !arguments.isList() {
 		compileError("proper list required for function application or macro use")
 	} else if arguments.(*Pair).ListLength() != length {
-		compileError("Wrong number of arguments: number? requires %d, but got %d",
+		compileError("wrong number of arguments: number? requires %d, but got %d",
 			length, arguments.(*Pair).ListLength())
 	}
 }
@@ -85,8 +83,9 @@ func typeName(object Object) string {
 	case *Pair:
 		if object.isNull() {
 			return "null"
+		} else {
+			return "pair"
 		}
-		return "pair"
 	default:
 		rawTypeName := fmt.Sprintf("%T", object)
 		typeName := strings.Replace(rawTypeName, "*scheme.", "", 1)
@@ -116,7 +115,7 @@ func booleanByFunc(arguments Object, typeCheckFunc func(Object) bool) Object {
 	return NewBoolean(typeCheckFunc(object))
 }
 
-func compareNumber(arguments Object, compareFunc func(int, int) bool) Object {
+func compareNumbers(arguments Object, compareFunc func(int, int) bool) Object {
 	assertListMinimum(arguments, 2)
 
 	numbers := evaledObjects(arguments.(*Pair).Elements())
@@ -132,7 +131,7 @@ func compareNumber(arguments Object, compareFunc func(int, int) bool) Object {
 	return NewBoolean(true)
 }
 
-func plus(arguments Object) Object {
+func plusProc(arguments Object) Object {
 	assertListMinimum(arguments, 0)
 
 	numbers := evaledObjects(arguments.(*Pair).Elements())
@@ -145,7 +144,7 @@ func plus(arguments Object) Object {
 	return NewNumber(sum)
 }
 
-func minus(arguments Object) Object {
+func minusProc(arguments Object) Object {
 	assertListMinimum(arguments, 1)
 
 	numbers := evaledObjects(arguments.(*Pair).Elements())
@@ -158,7 +157,7 @@ func minus(arguments Object) Object {
 	return NewNumber(difference)
 }
 
-func multiply(arguments Object) Object {
+func multiplyProc(arguments Object) Object {
 	assertListMinimum(arguments, 0)
 
 	numbers := evaledObjects(arguments.(*Pair).Elements())
@@ -171,7 +170,7 @@ func multiply(arguments Object) Object {
 	return NewNumber(product)
 }
 
-func divide(arguments Object) Object {
+func divideProc(arguments Object) Object {
 	assertListMinimum(arguments, 1)
 
 	numbers := evaledObjects(arguments.(*Pair).Elements())
@@ -184,85 +183,67 @@ func divide(arguments Object) Object {
 	return NewNumber(quotient)
 }
 
-func equal(arguments Object) Object {
-	return compareNumber(arguments, func(a, b int) bool { return a == b })
+func equalProc(arguments Object) Object {
+	return compareNumbers(arguments, func(a, b int) bool { return a == b })
 }
 
-func lessThan(arguments Object) Object {
-	return compareNumber(arguments, func(a, b int) bool { return a < b })
+func lessThanProc(arguments Object) Object {
+	return compareNumbers(arguments, func(a, b int) bool { return a < b })
 }
 
-func lessEqual(arguments Object) Object {
-	return compareNumber(arguments, func(a, b int) bool { return a <= b })
+func lessEqualProc(arguments Object) Object {
+	return compareNumbers(arguments, func(a, b int) bool { return a <= b })
 }
 
-func greaterThan(arguments Object) Object {
-	return compareNumber(arguments, func(a, b int) bool { return a > b })
+func greaterThanProc(arguments Object) Object {
+	return compareNumbers(arguments, func(a, b int) bool { return a > b })
 }
 
-func greaterEqual(arguments Object) Object {
-	return compareNumber(arguments, func(a, b int) bool { return a >= b })
+func greaterEqualProc(arguments Object) Object {
+	return compareNumbers(arguments, func(a, b int) bool { return a >= b })
 }
 
-func isNumber(arguments Object) Object {
-	return booleanByFunc(arguments, func(object Object) bool {
-		return object.isNumber()
-	})
+func isNumberProc(arguments Object) Object {
+	return booleanByFunc(arguments, func(object Object) bool { return object.isNumber() })
 }
 
-func isNull(arguments Object) Object {
-	return booleanByFunc(arguments, func(object Object) bool {
-		return object.isNull()
-	})
+func isNullProc(arguments Object) Object {
+	return booleanByFunc(arguments, func(object Object) bool { return object.isNull() })
 }
 
-func isProcedure(arguments Object) Object {
-	return booleanByFunc(arguments, func(object Object) bool {
-		return object.isProcedure()
-	})
+func isProcedureProc(arguments Object) Object {
+	return booleanByFunc(arguments, func(object Object) bool { return object.isProcedure() })
 }
 
-func isBoolean(arguments Object) Object {
-	return booleanByFunc(arguments, func(object Object) bool {
-		return object.isBoolean()
-	})
+func isBooleanProc(arguments Object) Object {
+	return booleanByFunc(arguments, func(object Object) bool { return object.isBoolean() })
 }
 
-func isPair(arguments Object) Object {
-	return booleanByFunc(arguments, func(object Object) bool {
-		return object.isPair()
-	})
+func isPairProc(arguments Object) Object {
+	return booleanByFunc(arguments, func(object Object) bool { return object.isPair() })
 }
 
-func isList(arguments Object) Object {
-	return booleanByFunc(arguments, func(object Object) bool {
-		return object.isList()
-	})
+func isListProc(arguments Object) Object {
+	return booleanByFunc(arguments, func(object Object) bool { return object.isList() })
 }
 
-func isSymbol(arguments Object) Object {
-	return booleanByFunc(arguments, func(object Object) bool {
-		return object.isSymbol()
-	})
+func isSymbolProc(arguments Object) Object {
+	return booleanByFunc(arguments, func(object Object) bool { return object.isSymbol() })
 }
 
-func isString(arguments Object) Object {
-	return booleanByFunc(arguments, func(object Object) bool {
-		return object.isString()
-	})
+func isStringProc(arguments Object) Object {
+	return booleanByFunc(arguments, func(object Object) bool { return object.isString() })
 }
 
-func not(arguments Object) Object {
+func notProc(arguments Object) Object {
 	return booleanByFunc(arguments,
-		func(object Object) bool {
-			return object.isBoolean() && !object.(*Boolean).value
-		})
+		func(object Object) bool { return object.isBoolean() && !object.(*Boolean).value })
 }
 
-func cons(arguments Object) Object {
+func consProc(arguments Object) Object {
 	assertListEqual(arguments, 2)
-
 	objects := evaledObjects(arguments.(*Pair).Elements())
+
 	return &Pair{
 		ObjectBase: ObjectBase{parent: arguments.Parent()},
 		Car:        objects[0],
@@ -270,7 +251,7 @@ func cons(arguments Object) Object {
 	}
 }
 
-func car(arguments Object) Object {
+func carProc(arguments Object) Object {
 	assertListEqual(arguments, 1)
 
 	object := arguments.(*Pair).ElementAt(0).Eval()
@@ -278,7 +259,7 @@ func car(arguments Object) Object {
 	return object.(*Pair).Car
 }
 
-func cdr(arguments Object) Object {
+func cdrProc(arguments Object) Object {
 	assertListEqual(arguments, 1)
 
 	object := arguments.(*Pair).ElementAt(0).Eval()
@@ -286,11 +267,11 @@ func cdr(arguments Object) Object {
 	return object.(*Pair).Cdr
 }
 
-func list(arguments Object) Object {
+func listProc(arguments Object) Object {
 	return arguments
 }
 
-func setCar(arguments Object) Object {
+func setCarProc(arguments Object) Object {
 	assertListEqual(arguments, 2)
 
 	object := arguments.(*Pair).ElementAt(1).Eval()
@@ -301,7 +282,7 @@ func setCar(arguments Object) Object {
 	return NewSymbol("#<undef>")
 }
 
-func setCdr(arguments Object) Object {
+func setCdrProc(arguments Object) Object {
 	assertListEqual(arguments, 2)
 
 	object := arguments.(*Pair).ElementAt(1).Eval()
@@ -312,7 +293,7 @@ func setCdr(arguments Object) Object {
 	return NewSymbol("#<undef>")
 }
 
-func length(arguments Object) Object {
+func lengthProc(arguments Object) Object {
 	assertListEqual(arguments, 1)
 
 	list := arguments.(*Pair).ElementAt(0).Eval()
@@ -321,7 +302,7 @@ func length(arguments Object) Object {
 	return NewNumber(list.(*Pair).ListLength())
 }
 
-func memq(arguments Object) Object {
+func memqProc(arguments Object) Object {
 	assertListEqual(arguments, 2)
 
 	searchObject := arguments.(*Pair).ElementAt(0).Eval()
@@ -344,7 +325,7 @@ func memq(arguments Object) Object {
 	return NewBoolean(false)
 }
 
-func last(arguments Object) Object {
+func lastProc(arguments Object) Object {
 	assertListEqual(arguments, 1)
 
 	list := arguments.(*Pair).ElementAt(0).Eval()
@@ -357,7 +338,7 @@ func last(arguments Object) Object {
 	return elements[len(elements)-1].Eval()
 }
 
-func appendList(arguments Object) Object {
+func appendProc(arguments Object) Object {
 	assertListMinimum(arguments, 0)
 	elements := evaledObjects(arguments.(*Pair).Elements())
 
@@ -365,10 +346,11 @@ func appendList(arguments Object) Object {
 	for _, element := range elements {
 		appendedList = appendedList.AppendList(element)
 	}
+
 	return appendedList
 }
 
-func stringAppend(arguments Object) Object {
+func stringAppendProc(arguments Object) Object {
 	assertListMinimum(arguments, 0)
 
 	stringObjects := evaledObjects(arguments.(*Pair).Elements())
@@ -381,7 +363,7 @@ func stringAppend(arguments Object) Object {
 	return NewString(strings.Join(texts, ""))
 }
 
-func symbolToString(arguments Object) Object {
+func symbolToStringProc(arguments Object) Object {
 	assertListEqual(arguments, 1)
 
 	object := arguments.(*Pair).ElementAt(0).Eval()
@@ -389,7 +371,7 @@ func symbolToString(arguments Object) Object {
 	return NewString(object.(*Symbol).identifier)
 }
 
-func stringToSymbol(arguments Object) Object {
+func stringToSymbolProc(arguments Object) Object {
 	assertListEqual(arguments, 1)
 
 	object := arguments.(*Pair).ElementAt(0).Eval()
@@ -397,7 +379,7 @@ func stringToSymbol(arguments Object) Object {
 	return NewSymbol(object.(*String).text)
 }
 
-func stringToNumber(arguments Object) Object {
+func stringToNumberProc(arguments Object) Object {
 	assertListEqual(arguments, 1)
 
 	object := arguments.(*Pair).ElementAt(0).Eval()
@@ -405,7 +387,7 @@ func stringToNumber(arguments Object) Object {
 	return NewNumber(object.(*String).text)
 }
 
-func numberToString(arguments Object) Object {
+func numberToStringProc(arguments Object) Object {
 	assertListEqual(arguments, 1)
 
 	object := arguments.(*Pair).ElementAt(0).Eval()
@@ -461,25 +443,25 @@ func areSameList(a Object, b Object) bool {
 	}
 }
 
-func isEq(arguments Object) Object {
+func isEqProc(arguments Object) Object {
 	assertListEqual(arguments, 2)
 
 	objects := evaledObjects(arguments.(*Pair).Elements())
 	return NewBoolean(areIdentical(objects[0], objects[1]))
 }
 
-func isNeq(arguments Object) Object {
-	return NewBoolean(!isEq(arguments).(*Boolean).value)
+func isNeqProc(arguments Object) Object {
+	return NewBoolean(!isEqProc(arguments).(*Boolean).value)
 }
 
-func isEqual(arguments Object) Object {
+func isEqualProc(arguments Object) Object {
 	assertListEqual(arguments, 2)
 
 	objects := evaledObjects(arguments.(*Pair).Elements())
 	return NewBoolean(areEqual(objects[0], objects[1]))
 }
 
-func load(arguments Object) Object {
+func loadProc(arguments Object) Object {
 	assertListEqual(arguments, 1)
 
 	object := arguments.(*Pair).ElementAt(0).Eval()
@@ -498,21 +480,6 @@ func load(arguments Object) Object {
 			expression.Eval()
 		}
 	}
+
 	return NewBoolean(true)
-}
-
-func writeProc(arguments Object) Object {
-	assertListEqual(arguments, 1) // TODO: accept output port
-
-	object := arguments.(*Pair).ElementAt(0).Eval()
-	fmt.Printf("%s", object)
-	return NewSymbol("#<undef>")
-}
-
-func printProc(arguments Object) Object {
-	assertListEqual(arguments, 1) // TODO: accept output port
-
-	object := arguments.(*Pair).ElementAt(0).Eval()
-	fmt.Printf("%s\n", object)
-	return NewSymbol("#<undef>")
 }
