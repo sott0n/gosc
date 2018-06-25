@@ -34,7 +34,7 @@ func (a *Application) String() string {
 func (a *Application) applyProcedure() Object {
 	evaledObject := a.procedure.Eval()
 	if !evaledObject.isProcedure() {
-		runtimeError("Invalid application")
+		runtimeError("invalid application")
 	}
 	procedure := evaledObject.(*Procedure)
 	return procedure.Invoke(a.arguments)

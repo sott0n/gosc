@@ -116,6 +116,9 @@ func (i *Interpreter) DumpAST(object Object, indentLevel int) {
 	case *Cond:
 	case *And:
 	case *Or:
+	case *Begin:
+	case *Do:
+	case *Iterator:
 	}
 }
 

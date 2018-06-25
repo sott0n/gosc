@@ -135,3 +135,109 @@ func (o *Or) Eval() Object {
 	}
 	return lastResult
 }
+
+// Begin is a struct for begin statement.
+type Begin struct {
+	ObjectBase
+	body Object
+}
+
+// NewBegin is a new object for begin syntax.
+func NewBegin(parent Object) *Begin {
+	return &Begin{ObjectBase: ObjectBase{parent: parent}}
+}
+
+// Eval is evaluation for begin syntax.
+func (b *Begin) Eval() Object {
+	lastResult := Object(NewSymbol("#<undef>"))
+	for _, object := range b.body.(*Pair).Elements() {
+		lastResult = object.Eval()
+	}
+	return lastResult
+}
+
+// Do is a struct for do statement.
+type Do struct {
+	ObjectBase
+	iterators    []*Iterator
+	testBody     Object
+	continueBody Object
+	localBinding Binding
+}
+
+// NewDo is a new object for do syntax.
+func NewDo(parent Object) *Do {
+	return &Do{ObjectBase: ObjectBase{parent: parent}, localBinding: Binding{}}
+}
+
+func (d *Do) binding() Binding {
+	return d.localBinding
+}
+
+func (d *Do) scopedBinding() Binding {
+	scopedBinding := make(Binding)
+	for identifier, object := range d.localBinding {
+		scopedBinding[identifier] = object
+	}
+
+	parent := d.Parent()
+	for parent != nil {
+		for identifier, object := range parent.binding() {
+			if scopedBinding[identifier] == nil {
+				scopedBinding[identifier] = object
+			}
+		}
+		parent = parent.Parent()
+	}
+	return scopedBinding
+}
+
+// Eval is evaluation for do syntax.
+func (d *Do) Eval() Object {
+	// bind iterators
+	for _, iterator := range d.iterators {
+		if iterator.variable.isVariable() {
+			d.localBinding[iterator.variable.(*Variable).identifier] = iterator.value.Eval()
+		}
+	}
+	// eval test ->
+	//   true: eval testBody and returns its result
+	//   false: eval continueBody, eval iterator's update
+	testElements := d.testBody.(*Pair).Elements()
+	continueElements := d.continueBody.(*Pair).Elements()
+	for {
+		testResult := testElements[0].Eval()
+		if !testResult.isBoolean() || testResult.(*Boolean).value == true {
+			for _, element := range testElements[1:] {
+				testResult = element.Eval()
+			}
+			return testResult
+		} else {
+			// eval continueBody
+			for _, element := range continueElements {
+				element.Eval()
+			}
+
+			// update iterators
+			for _, iterator := range d.iterators {
+				if iterator.variable.isVariable() {
+					d.localBinding[iterator.variable.(*Variable).identifier] = iterator.update.Eval()
+				}
+			}
+		}
+	}
+	return NewSymbol("#<undef>")
+}
+
+// Iterator is a struct for iterator statement.
+type Iterator struct {
+	ObjectBase
+	variable Object
+	value    Object
+	update   Object
+}
+
+// NewIterator is a new object for iterator syntax.
+func NewIterator(parent Object) *Iterator {
+	return &Iterator{ObjectBase: ObjectBase{parent: parent}}
+}

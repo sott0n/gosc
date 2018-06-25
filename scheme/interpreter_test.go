@@ -109,7 +109,7 @@ var interpreterTests = []interpreterTest{
 	evalTest("(length '(1 2))", "2"),
 	evalTest("(length (list 1 '(2 3) 4))", "3"),
 
-	evalTest("(memq (car (cons 'b 'c)) '(a b c)", "(b c)"),
+	evalTest("(memq (car (cons 'b 'c)) '(a b c))", "(b c)"),
 	evalTest("(memq 'd '(a b c))", "#f"),
 	evalTest("(memq 'a (cons 'a 'b))", "(a . b)"),
 
@@ -117,7 +117,7 @@ var interpreterTests = []interpreterTest{
 	evalTest("(last (list 1 (+ 2 3)))", "5"),
 
 	evalTest("(append)", "()"),
-	evalTest("(append '(1)", "(1)"),
+	evalTest("(append '(1))", "(1)"),
 	evalTest("(append '(1 2) '(3 4))", "(1 2 3 4)"),
 
 	evalTest("(string-append)", "\"\""),
@@ -199,10 +199,7 @@ var interpreterTests = []interpreterTest{
 	evalTest("(define x 1) ((lambda (x) (+ x x)) 2)", "x", "4"),
 	evalTest("((lambda (x) (define x 3) x) 2)", "3"),
 	evalTest("((lambda (x y z) (* (+ x y) z)) 1 2 3)", "9"),
-	evalTest("(define x (lambda (a) (* 2 a))) "+
-		"(define y (lambda (a) (* 3 a))) "+
-		"(define z (lambda (a b) (x a) (y b))) "+
-		"(* (x 3) (y 2) (z 4 5))", "x", "y", "z", "540"),
+	evalTest("(define x (lambda (a) (* 2 a))) (define y (lambda (a) (* 3 a))) (define z (lambda (a b) (x a) (y b))) (* (x 3) (y 2) (z 4 5))", "x", "y", "z", "540"),
 
 	evalTest("(define x 2) (set! x 3) x", "x", "#<undef>", "3"),
 	evalTest("(define x 4) ((lambda (x) (set! x 3) x) 2) x", "x", "3", "4"),
@@ -235,9 +232,17 @@ var interpreterTests = []interpreterTest{
 	evalTest("(or #f 3 #f)", "3"),
 	evalTest("(or (number? 3) (boolean? 3))", "#t"),
 	evalTest("(or (number? #f) (boolean? 3))", "#f"),
+
+	evalTest("(begin)", "#<undef>"),
+	evalTest("(begin 1 2 3)", "3"),
+	evalTest("(begin (define x 2) (set! x 3) x) x", "3", "3"),
+
+	evalTest("(do () (#t)))", "#t"),
+	evalTest("(do ((i 1) (j 1)) (#t)))", "#t"),
+	evalTest("(define x \"\") (do ((i 1 (+ i 1)) (j 1 (* j 2))) ((> i 3) x) (begin (set! x (string-append x (number->string i))) (set! x (string-append x (number->string j)))))", "x", "\"112234\""),
 }
 
-// let parsing break tree structure, so not apply parser test.
+// let parsing break tree structure, so not to apply parser test
 var letTests = []interpreterTest{
 	evalTest("(let ((x 1)) x)", "1"),
 	evalTest("(let ((x 1) (y 2)) (+ x y))", "3"),
@@ -248,12 +253,12 @@ var letTests = []interpreterTest{
 }
 
 var runtimeErrorTests = []interpreterTest{
-	evalTest("(1)", "*** ERROR: Invalid application"),
+	evalTest("(1)", "*** ERROR: invalid application"),
 	evalTest("hello", "*** ERROR: Unbound variable: hello"),
 	evalTest("((lambda (x) (define y 1) 1) 1) y", "1", "*** ERROR: Unbound variable: y"),
-
 	evalTest("'1'", "1", "*** ERROR: unterminated quote"),
 	evalTest("(last ())", "*** ERROR: pair required: ()"),
+	evalTest("((lambda (x) (set! x 3) x) 2) x", "3", "*** ERROR: Unbound variable: x"),
 }
 
 var compileErrorTests = []interpreterTest{
@@ -262,10 +267,10 @@ var compileErrorTests = []interpreterTest{
 
 	evalTest("(-)", "*** ERROR: Compile Error: procedure requires at least 1 argument"),
 	evalTest("(/)", "*** ERROR: Compile Error: procedure requires at least 1 argument"),
-	evalTest("(number?)", "*** ERROR: Compile Error: Wrong number of arguments: number? requires 1, but got 0"),
-	evalTest("(null?)", "*** ERROR: Compile Error: Wrong number of arguments: number? requires 1, but got 0"),
-	evalTest("(null? 1 2)", "*** ERROR: Compile Error: Wrong number of arguments: number? requires 1, but got 2"),
-	evalTest("(not)", "*** ERROR: Compile Error: Wrong number of arguments: number? requires 1, but got 0"),
+	evalTest("(number?)", "*** ERROR: Compile Error: wrong number of arguments: number? requires 1, but got 0"),
+	evalTest("(null?)", "*** ERROR: Compile Error: wrong number of arguments: number? requires 1, but got 0"),
+	evalTest("(null? 1 2)", "*** ERROR: Compile Error: wrong number of arguments: number? requires 1, but got 2"),
+	evalTest("(not)", "*** ERROR: Compile Error: wrong number of arguments: number? requires 1, but got 0"),
 
 	evalTest("(+ 1 #t)", "*** ERROR: Compile Error: number required, but got #t"),
 	evalTest("(- #t)", "*** ERROR: Compile Error: number required, but got #t"),
@@ -275,29 +280,28 @@ var compileErrorTests = []interpreterTest{
 	evalTest("(string-append #f)", "*** ERROR: Compile Error: string required, but got #f"),
 	evalTest("(string-append 1)", "*** ERROR: Compile Error: string required, but got 1"),
 
-	evalTest("(string->symbol)", "*** ERROR: Compile Error: Wrong number of arguments: number? requires 1, but got 0"),
+	evalTest("(string->symbol)", "*** ERROR: Compile Error: wrong number of arguments: number? requires 1, but got 0"),
 	evalTest("(string->symbol 'hello)", "*** ERROR: Compile Error: string required, but got hello"),
-	evalTest("(symbol->string)", "*** ERROR: Compile Error: Wrong number of arguments: number? requires 1, but got 0"),
+	evalTest("(symbol->string)", "*** ERROR: Compile Error: wrong number of arguments: number? requires 1, but got 0"),
 	evalTest("(symbol->string \"\")", "*** ERROR: Compile Error: symbol required, but got \"\""),
-
 	evalTest("(string->number 1)", "*** ERROR: Compile Error: string required, but got 1"),
 	evalTest("(number->string \"1\")", "*** ERROR: Compile Error: number required, but got \"1\""),
 
 	evalTest("(car ())", "*** ERROR: Compile Error: pair required, but got ()"),
 	evalTest("(cdr ())", "*** ERROR: Compile Error: pair required, but got ()"),
-	evalTest("(car)", "*** ERROR: Compile Error: Wrong number of arguments: number? requires 1, but got 0"),
-	evalTest("(cdr)", "*** ERROR: Compile Error: Wrong number of arguments: number? requires 1, but got 0"),
-
-	evalTest("((lambda (x) (define y 1) 1) 1) y", "1", "*** ERROR: Unbound variable: y"),
+	evalTest("(car)", "*** ERROR: Compile Error: wrong number of arguments: number? requires 1, but got 0"),
+	evalTest("(cdr)", "*** ERROR: Compile Error: wrong number of arguments: number? requires 1, but got 0"),
 
 	evalTest("(length (cons 1 2))", "*** ERROR: Compile Error: proper list required for function application or macro use"),
-	evalTest("(memq 'a '(a b c) 1)", "*** ERROR: Compile Error: Wrong number of arguments: number? requires 2, but got 3"),
+	evalTest("(memq 'a '(a b c) 1)", "*** ERROR: Compile Error: wrong number of arguments: number? requires 2, but got 3"),
 	evalTest("(append () 1 ())", "*** ERROR: Compile Error: proper list required for function application or macro use"),
 	evalTest("(set! x 1 1)", "*** ERROR: Compile Error: syntax-error: malformed set!"),
 
-	evalTest("(cond)", "*** ERROR: Compile Error: at least one clause is required for cond"),
+	evalTest("(cond)", "*** ERROR: Compile Error: syntax-error: at least one clause is required for cond"),
 	evalTest("(cond ())", "*** ERROR: Compile Error: syntax-error: bad clause in cond"),
 	evalTest("(cond (#t) (else) ())", "*** ERROR: Compile Error: syntax-error: 'else' clause followed by more clauses"),
+
+	evalTest("(do () ()))", "*** ERROR: Compile Error: syntax-error: malformed do"),
 }
 
 func evalTest(source string, results ...string) interpreterTest {
