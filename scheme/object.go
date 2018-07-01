@@ -19,6 +19,7 @@ type Object interface {
 	isPair() bool
 	isList() bool
 	isSymbol() bool
+	isSyntax() bool
 	isString() bool
 	isVariable() bool
 	isApplication() bool
@@ -79,6 +80,10 @@ func (o *ObjectBase) isVariable() bool {
 }
 
 func (o *ObjectBase) isSymbol() bool {
+	return false
+}
+
+func (o *ObjectBase) isSyntax() bool {
 	return false
 }
 
