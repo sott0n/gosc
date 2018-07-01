@@ -2,6 +2,8 @@
 
 package scheme
 
+import "fmt"
+
 // Syntax is a type for updating value.
 type Syntax struct {
 	ObjectBase
@@ -16,6 +18,10 @@ func NewSyntax(function func(*Syntax, Object) Object) *Syntax {
 // Invoke is for evaluating set object.
 func (s *Syntax) Invoke(arguments Object) Object {
 	return s.function(s, arguments)
+}
+
+func (s *Syntax) String() string {
+	return fmt.Sprintf("#<syntax %s>", s.Bounder())
 }
 
 func (s *Syntax) isSyntax() bool {
