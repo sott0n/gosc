@@ -161,10 +161,6 @@ func (i *Interpreter) printWithIndent(text string, indentLevel int) {
 
 func (i *Interpreter) loadBuiltinLibrary(name string) {
 	originalParser := i.Parser
-	// buffer, err := ioutil.ReadFile(i.libraryPath(name))
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 	stringbuffer := i.readLibraryPath(name)
 	i.Parser = NewParser(stringbuffer)
 	i.EvalSource(false)
@@ -181,6 +177,7 @@ func (i *Interpreter) readLibraryPath(name string) string {
 	)
 	buffer, err := ioutil.ReadFile(targetpath)
 	if err != nil {
+		// Support a path of github for pathing circleci.
 		targetpath := filepath.Join(
 			os.Getenv("GOPATH"),
 			"src",
