@@ -161,21 +161,40 @@ func (i *Interpreter) printWithIndent(text string, indentLevel int) {
 
 func (i *Interpreter) loadBuiltinLibrary(name string) {
 	originalParser := i.Parser
-	buffer, err := ioutil.ReadFile(i.libraryPath(name))
-	if err != nil {
-		log.Fatal(err)
-	}
-	i.Parser = NewParser(string(buffer))
+	// buffer, err := ioutil.ReadFile(i.libraryPath(name))
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	stringbuffer := i.readLibraryPath(name)
+	i.Parser = NewParser(stringbuffer)
 	i.EvalSource(false)
 	i.Parser = originalParser
 }
 
-func (i *Interpreter) libraryPath(name string) string {
-	return filepath.Join(
+func (i *Interpreter) readLibraryPath(name string) string {
+	targetpath := filepath.Join(
 		os.Getenv("GOPATH"),
 		"src",
 		"gosc",
 		"lib",
 		name+".scm",
 	)
+	buffer, err := ioutil.ReadFile(targetpath)
+	if err != nil {
+		targetpath := filepath.Join(
+			os.Getenv("GOPATH"),
+			"src",
+			"github.com",
+			"sott0n",
+			"gosc",
+			"lib",
+			name+".scm",
+		)
+		buffer, err := ioutil.ReadFile(targetpath)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return string(buffer)
+	}
+	return string(buffer)
 }
