@@ -6,6 +6,10 @@ package scheme
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+	"path/filepath"
 	"strings"
 	"text/scanner"
 )
@@ -19,7 +23,9 @@ type Interpreter struct {
 
 // NewInterpreter is a struction for definition of new interpreter.
 func NewInterpreter(source string) *Interpreter {
-	return &Interpreter{Parser: NewParser(source), topLevel: BuiltinProcedures()}
+	i := &Interpreter{Parser: NewParser(source), topLevel: BuiltinProcedures()}
+	i.loadBuiltinLibrary("builtin")
+	return i
 }
 
 // ReloadSourceCode is to load new source code with current environment.
@@ -60,18 +66,6 @@ func (i *Interpreter) EvalSource(dumpAST bool) (results []string) {
 		results = append(results, expression.Eval().String())
 	}
 	return
-}
-
-func (i *Interpreter) bind(identifier string, object Object) {
-	i.topLevel[identifier] = object
-}
-
-func (i *Interpreter) binding() Binding {
-	return i.topLevel
-}
-
-func (i *Interpreter) scopedBinding() Binding {
-	return i.topLevel
 }
 
 // DumpAST is a defining of dumping abstrct tree.
@@ -149,6 +143,39 @@ func (i *Interpreter) DumpAST(object Object, indentLevel int) {
 	}
 }
 
+func (i *Interpreter) bind(identifier string, object Object) {
+	i.topLevel[identifier] = object
+}
+
+func (i *Interpreter) binding() Binding {
+	return i.topLevel
+}
+
+func (i *Interpreter) scopedBinding() Binding {
+	return i.topLevel
+}
+
 func (i *Interpreter) printWithIndent(text string, indentLevel int) {
 	fmt.Printf("%s%s\n", strings.Repeat(" ", indentLevel), text)
+}
+
+func (i *Interpreter) loadBuiltinLibrary(name string) {
+	originalParser := i.Parser
+	buffer, err := ioutil.ReadFile(i.libraryPath(name))
+	if err != nil {
+		log.Fatal(err)
+	}
+	i.Parser = NewParser(string(buffer))
+	i.EvalSource(false)
+	i.Parser = originalParser
+}
+
+func (i *Interpreter) libraryPath(name string) string {
+	return filepath.Join(
+		os.Getenv("GOPATH"),
+		"src",
+		"gosc",
+		"lib",
+		name+".scm",
+	)
 }
