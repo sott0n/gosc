@@ -9,3 +9,7 @@
 (define not
     (lambda (x)
         (eq? x #f)))
+
+(define null?
+    (lambda (x)
+        (eq? x ())))

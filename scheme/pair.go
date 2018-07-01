@@ -12,6 +12,11 @@ import (
 	"strings"
 )
 
+var (
+	// Null is definition of var for null.
+	Null = &Pair{ObjectBase: ObjectBase{parent: nil}, Car: nil, Cdr: nil}
+)
+
 // Pair is a struction for car and cdr.
 type Pair struct {
 	ObjectBase
@@ -19,8 +24,8 @@ type Pair struct {
 	Cdr Object
 }
 
-// NewNull is creating clear pair.
-func NewNull(parent Object) *Pair {
+// NewPair is creating clear pair.
+func NewPair(parent Object) *Pair {
 	return &Pair{ObjectBase: ObjectBase{parent: parent}, Car: nil, Cdr: nil}
 }
 

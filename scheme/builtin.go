@@ -21,7 +21,6 @@ func BuiltinProcedures() Binding {
 		">":              builtinProcedure(greaterThanProc),
 		">=":             builtinProcedure(greaterEqualProc),
 		"number?":        builtinProcedure(isNumberProc),
-		"null?":          builtinProcedure(isNullProc),
 		"procedure?":     builtinProcedure(isProcedureProc),
 		"boolean?":       builtinProcedure(isBooleanProc),
 		"pair?":          builtinProcedure(isPairProc),
@@ -206,10 +205,6 @@ func isNumberProc(arguments Object) Object {
 	return booleanByFunc(arguments, func(object Object) bool { return object.isNumber() })
 }
 
-func isNullProc(arguments Object) Object {
-	return booleanByFunc(arguments, func(object Object) bool { return object.isNull() })
-}
-
 func isProcedureProc(arguments Object) Object {
 	return booleanByFunc(arguments, func(object Object) bool { return object.isProcedure() })
 }
@@ -336,7 +331,7 @@ func appendProc(arguments Object) Object {
 	assertListMinimum(arguments, 0)
 	elements := evaledObjects(arguments.(*Pair).Elements())
 
-	appendedList := NewNull(arguments)
+	appendedList := NewPair(arguments)
 	for _, element := range elements {
 		appendedList = appendedList.AppendList(element)
 	}
