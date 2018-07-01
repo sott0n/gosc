@@ -25,7 +25,7 @@ func (s *Set) Eval() Object {
 	}
 	value := s.value.Eval()
 	s.ObjectBase.updateBinding(variable.(*Variable).identifier, value)
-	return NewSymbol("#<undef>")
+	return undef
 }
 
 // If is for if statement object.
@@ -79,11 +79,11 @@ func (c *Cond) Eval() Object {
 	}
 
 	if c.elseBody == nil {
-		return NewSymbol("#<undef>")
+		return undef
 	}
 
 	elements := c.elseBody.(*Pair).Elements()
-	lastResult := Object(NewSymbol("#<undef>"))
+	lastResult := Object(undef)
 	for _, element := range elements {
 		lastResult = element.Eval()
 	}
@@ -149,7 +149,7 @@ func NewBegin(parent Object) *Begin {
 
 // Eval is evaluation for begin syntax.
 func (b *Begin) Eval() Object {
-	lastResult := Object(NewSymbol("#<undef>"))
+	lastResult := Object(undef)
 	for _, object := range b.body.(*Pair).Elements() {
 		lastResult = object.Eval()
 	}
@@ -226,7 +226,7 @@ func (d *Do) Eval() Object {
 			}
 		}
 	}
-	return NewSymbol("#<undef>")
+	return undef
 }
 
 // Iterator is a struct for iterator statement.

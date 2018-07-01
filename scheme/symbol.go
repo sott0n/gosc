@@ -3,6 +3,11 @@
 
 package scheme
 
+var (
+	symbols = make(map[string]*Symbol)
+	undef   = &Symbol{identifier: "#<undef>"}
+)
+
 // Symbol is a struction for scheme symbol object.
 type Symbol struct {
 	ObjectBase
@@ -11,10 +16,10 @@ type Symbol struct {
 
 // NewSymbol is a function for difinition Symbol object.
 func NewSymbol(identifier string, options ...Object) *Symbol {
-	if len(options) > 0 {
-		return &Symbol{ObjectBase: ObjectBase{parent: options[0]}, identifier: identifier}
+	if symbols[identifier] == nil {
+		symbols[identifier] = &Symbol{ObjectBase: ObjectBase{parent: nil}, identifier: identifier}
 	}
-	return &Symbol{identifier: identifier}
+	return symbols[identifier]
 }
 
 // Eval is symbol's eval IF.
