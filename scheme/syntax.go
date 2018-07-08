@@ -8,6 +8,7 @@ var (
 	builtinSyntaxes = Binding{
 		"set!": NewSyntax(setSyntax),
 		"if":   NewSyntax(ifSyntax),
+		"and":  NewSyntax(andSyntax),
 	}
 )
 
@@ -41,6 +42,12 @@ func (s *Syntax) malformedError() {
 
 func (s *Syntax) assertListEqual(arguments Object, length int) {
 	if !arguments.isList() || arguments.(*Pair).ListLength() != length {
+		s.malformedError()
+	}
+}
+
+func (s *Syntax) assertListMinimum(arguments Object, minimum int) {
+	if !arguments.isList() || arguments.(*Pair).ListLength() < minimum {
 		s.malformedError()
 	}
 }
@@ -87,6 +94,19 @@ func ifSyntax(s *Syntax, arguments Object) Object {
 	}
 }
 
+func andSyntax(s *Syntax, arguments Object) Object {
+	s.assertListMinimum(arguments, 0)
+
+	lastResult := Object(NewBoolean(true))
+	for _, object := range arguments.(*Pair).Elements() {
+		lastResult = object.Eval()
+		if lastResult.isBoolean() && lastResult.(*Boolean).value == false {
+			return NewBoolean(false)
+		}
+	}
+	return lastResult
+}
+
 // Cond is for cond statement object.
 type Cond struct {
 	ObjectBase
@@ -123,29 +143,6 @@ func (c *Cond) Eval() Object {
 	lastResult := Object(undef)
 	for _, element := range elements {
 		lastResult = element.Eval()
-	}
-	return lastResult
-}
-
-// And is a struct for and statement.
-type And struct {
-	ObjectBase
-	body Object
-}
-
-// NewAnd is a new object for and syntax.
-func NewAnd(parent Object) *And {
-	return &And{ObjectBase: ObjectBase{parent: parent}}
-}
-
-// Eval is evaluation for and syntax.
-func (a *And) Eval() Object {
-	lastResult := Object(NewBoolean(true))
-	for _, object := range a.body.(*Pair).Elements() {
-		lastResult = object.Eval()
-		if lastResult.isBoolean() && lastResult.(*Boolean).value == false {
-			return NewBoolean(false)
-		}
 	}
 	return lastResult
 }
