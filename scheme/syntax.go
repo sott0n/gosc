@@ -6,10 +6,11 @@ import "fmt"
 
 var (
 	builtinSyntaxes = Binding{
-		"set!": NewSyntax(setSyntax),
-		"if":   NewSyntax(ifSyntax),
-		"and":  NewSyntax(andSyntax),
-		"or":   NewSyntax(orSyntax),
+		"set!":  NewSyntax(setSyntax),
+		"if":    NewSyntax(ifSyntax),
+		"and":   NewSyntax(andSyntax),
+		"or":    NewSyntax(orSyntax),
+		"begin": NewSyntax(beginSyntax),
 	}
 )
 
@@ -121,6 +122,16 @@ func orSyntax(s *Syntax, arguments Object) Object {
 	return lastResult
 }
 
+func beginSyntax(s *Syntax, arguments Object) Object {
+	s.assertListMinimum(arguments, 0)
+
+	lastResult := Object(undef)
+	for _, object := range arguments.(*Pair).Elements() {
+		lastResult = object.Eval()
+	}
+	return lastResult
+}
+
 // Cond is for cond statement object.
 type Cond struct {
 	ObjectBase
@@ -157,26 +168,6 @@ func (c *Cond) Eval() Object {
 	lastResult := Object(undef)
 	for _, element := range elements {
 		lastResult = element.Eval()
-	}
-	return lastResult
-}
-
-// Begin is a struct for begin statement.
-type Begin struct {
-	ObjectBase
-	body Object
-}
-
-// NewBegin is a new object for begin syntax.
-func NewBegin(parent Object) *Begin {
-	return &Begin{ObjectBase: ObjectBase{parent: parent}}
-}
-
-// Eval is evaluation for begin syntax.
-func (b *Begin) Eval() Object {
-	lastResult := Object(undef)
-	for _, object := range b.body.(*Pair).Elements() {
-		lastResult = object.Eval()
 	}
 	return lastResult
 }
