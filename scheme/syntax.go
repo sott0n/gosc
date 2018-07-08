@@ -7,6 +7,7 @@ import "fmt"
 var (
 	builtinSyntaxes = Binding{
 		"set!": NewSyntax(setSyntax),
+		"if":   NewSyntax(ifSyntax),
 	}
 )
 
@@ -44,6 +45,19 @@ func (s *Syntax) assertListEqual(arguments Object, length int) {
 	}
 }
 
+func (s *Syntax) assertListRange(arguments Object, lengthRange []int) {
+	if !arguments.isList() {
+		s.malformedError()
+	}
+
+	for _, length := range lengthRange {
+		if length == arguments.(*Pair).ListLength() {
+			return
+		}
+	}
+	s.malformedError()
+}
+
 func setSyntax(s *Syntax, arguments Object) Object {
 	s.assertListEqual(arguments, 2)
 	elements := arguments.(*Pair).Elements()
@@ -57,26 +71,20 @@ func setSyntax(s *Syntax, arguments Object) Object {
 	return undef
 }
 
-// If is for if statement object.
-type If struct {
-	ObjectBase
-	condition Object
-	trueBody  Object
-	falseBody Object
-}
+func ifSyntax(s *Syntax, arguments Object) Object {
+	s.assertListRange(arguments, []int{2, 3})
+	elements := arguments.(*Pair).Elements()
 
-// NewIf is definition of creating if statement.
-func NewIf(parent Object) *If {
-	return &If{ObjectBase: ObjectBase{parent: parent}}
-}
-
-// Eval is IF of If statement's eval.
-func (i *If) Eval() Object {
-	result := i.condition.Eval()
-	if result.isBoolean() && result.(*Boolean).value {
-		return i.trueBody.Eval()
+	result := elements[0].Eval()
+	if result.isBoolean() && !result.(*Boolean).value {
+		if len(elements) == 3 {
+			return elements[2].Eval()
+		} else {
+			return undef
+		}
+	} else {
+		return elements[1].Eval()
 	}
-	return i.falseBody.Eval()
 }
 
 // Cond is for cond statement object.
