@@ -9,6 +9,7 @@ var (
 		"set!": NewSyntax(setSyntax),
 		"if":   NewSyntax(ifSyntax),
 		"and":  NewSyntax(andSyntax),
+		"or":   NewSyntax(orSyntax),
 	}
 )
 
@@ -107,6 +108,19 @@ func andSyntax(s *Syntax, arguments Object) Object {
 	return lastResult
 }
 
+func orSyntax(s *Syntax, arguments Object) Object {
+	s.assertListMinimum(arguments, 0)
+
+	lastResult := Object(NewBoolean(false))
+	for _, object := range arguments.(*Pair).Elements() {
+		lastResult = object.Eval()
+		if !lastResult.isBoolean() || lastResult.(*Boolean).value != false {
+			return lastResult
+		}
+	}
+	return lastResult
+}
+
 // Cond is for cond statement object.
 type Cond struct {
 	ObjectBase
@@ -143,29 +157,6 @@ func (c *Cond) Eval() Object {
 	lastResult := Object(undef)
 	for _, element := range elements {
 		lastResult = element.Eval()
-	}
-	return lastResult
-}
-
-// Or is a struct for or statement.
-type Or struct {
-	ObjectBase
-	body Object
-}
-
-// NewOr is a new object for or syntax.
-func NewOr(parent Object) *Or {
-	return &Or{ObjectBase: ObjectBase{parent: parent}}
-}
-
-// Eval is evaluation for or syntax.
-func (o *Or) Eval() Object {
-	lastResult := Object(NewBoolean(false))
-	for _, object := range o.body.(*Pair).Elements() {
-		lastResult = object.Eval()
-		if !lastResult.isBoolean() || lastResult.(*Boolean).value != false {
-			return lastResult
-		}
 	}
 	return lastResult
 }
