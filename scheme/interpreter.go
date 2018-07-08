@@ -23,7 +23,7 @@ type Interpreter struct {
 
 // NewInterpreter is a struction for definition of new interpreter.
 func NewInterpreter(source string) *Interpreter {
-	i := &Interpreter{Parser: NewParser(source), topLevel: BuiltinProcedures()}
+	i := &Interpreter{Parser: NewParser(source), topLevel: DefaultBinding()}
 	i.loadBuiltinLibrary("builtin")
 	return i
 }

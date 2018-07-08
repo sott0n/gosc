@@ -4,6 +4,12 @@ package scheme
 
 import "fmt"
 
+var (
+	builtinSyntaxes = Binding{
+		"set!": NewSyntax(setSyntax),
+	}
+)
+
 // Syntax is a type for updating value.
 type Syntax struct {
 	ObjectBase
