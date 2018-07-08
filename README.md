@@ -23,7 +23,7 @@ $ gosc
 #### Execute scheme file
 
 ```bash
-$ gosc -f [filename].scm
+$ gosc [filename].scm
 ```
 
 #### One liner
