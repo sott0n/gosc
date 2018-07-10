@@ -5,7 +5,7 @@ package scheme
 
 var (
 	symbols = make(map[string]*Symbol)
-	undef   = &Symbol{identifier: "#<undef>"}
+	undef   = Object(&Symbol{identifier: "#<undef>"})
 )
 
 // Symbol is a struction for scheme symbol object.
