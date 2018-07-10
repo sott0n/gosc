@@ -165,3 +165,15 @@ func (i *Interpreter) readLibraryPath(name string) string {
 	}
 	return string(buffer)
 }
+
+func syntaxError(format string, a ...interface{}) {
+	compileError("syntax-error: "+format, a...)
+}
+
+func compileError(format string, a ...interface{}) {
+	runtimeError("Compile Error: "+format, a...)
+}
+
+func runtimeError(format string, a ...interface{}) {
+	panic(fmt.Sprintf(format, a...))
+}

@@ -4,8 +4,6 @@
 
 package scheme
 
-import "fmt"
-
 // Parser is a struction for analyze scheme source's syntax.
 type Parser struct {
 	*Lexer
@@ -97,7 +95,7 @@ func (p *Parser) parseProcedure(parent Object) Object {
 	if p.TokenType() == '(' {
 		p.NextToken()
 	} else {
-		compileError("syntax-error: malformed lambda")
+		syntaxError("malformed lambda")
 	}
 
 	procedure := new(Procedure)
@@ -111,7 +109,7 @@ func (p *Parser) parseLet(parent Object) Object {
 	if p.TokenType() == '(' {
 		p.NextToken()
 	} else {
-		compileError("syntax-error: malformed let")
+		syntaxError("malformed let")
 	}
 
 	application := NewApplication(parent)
@@ -123,7 +121,7 @@ func (p *Parser) parseLet(parent Object) Object {
 	argumentSets := p.parseList(application)
 	for _, set := range argumentSets.(*Pair).Elements() {
 		if !set.isApplication() || set.(*Application).arguments.(*Pair).ListLength() != 1 {
-			compileError("syntax-error: malformed let")
+			syntaxError("malformed let")
 		}
 
 		procedureArguments.Append(set.(*Application).procedure)
@@ -144,17 +142,17 @@ func (p *Parser) parseDo(parent Object) Object {
 
 	// parse iterators
 	if p.NextToken() != "(" {
-		compileError("syntax-error: malformed do")
+		syntaxError("malformed do")
 	}
 	do.iterators = p.parseIterators(do)
 
 	// parse test and a body for the case test is true
 	if p.NextToken() != "(" {
-		compileError("syntax-error: malformed do")
+		syntaxError("malformed do")
 	}
 	do.testBody = p.parseList(do)
 	if do.testBody.(*Pair).ListLength() == 0 {
-		compileError("syntax-error: malformed do")
+		syntaxError("malformed do")
 	}
 
 	// parse a body for the case is false
@@ -170,15 +168,15 @@ func (p *Parser) parseIterators(parent Object) []*Iterator {
 		if firstToken == ")" {
 			break
 		} else if firstToken != "(" {
-			compileError("syntax-error: malformed do")
+			syntaxError("malformed do")
 		}
 
 		// get element list and assert their number
 		elementList := p.parseList(parent)
 		if !elementList.isList() || elementList.(*Pair).ListLength() < 2 {
-			compileError("syntax-error: malformed do")
+			syntaxError("malformed do")
 		} else if elementList.(*Pair).ListLength() > 3 {
-			compileError("syntax-error: bad update expr in do")
+			syntaxError("bad update expr in do")
 		}
 
 		iterator := NewIterator(parent)
@@ -238,20 +236,4 @@ func (p *Parser) parseQuotedList(parent Object) Object {
 func (p *Parser) ensureAvailability() {
 	// Error message will be printed by interpreter.
 	recover()
-}
-
-func syntaxError(format string, a ...interface{}) {
-	compileError("syntax-error: "+format, a...)
-}
-
-func compileError(format string, a ...interface{}) {
-	runtimeError("Compile Error: "+format, a...)
-}
-
-func runtimeError(format string, a ...interface{}) {
-	panic(fmt.Sprintf(format, a...))
-}
-
-func dumpObject(object interface{}) {
-	fmt.Printf("%#v\n", object)
 }
