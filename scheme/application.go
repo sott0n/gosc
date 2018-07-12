@@ -28,7 +28,11 @@ func (a *Application) String() string {
 	if a.procedure.isVariable() {
 		variable := a.procedure.(*Variable)
 		if variable.boundedObject(variable.identifier) == builtinSyntaxes["quote"] {
-			return "'" + a.arguments.(*Pair).ElementAt(0).String()
+			if a.arguments.isNull() {
+				return "(quote)"
+			} else {
+				return "'" + a.arguments.(*Pair).ElementAt(0).String()
+			}
 		}
 	}
 	pair := NewPair(nil)
