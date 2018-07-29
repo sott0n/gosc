@@ -28,7 +28,6 @@ type Object interface {
 	scopedBinding() Binding
 	binding() Binding
 	boundedObject(string) Object
-	ancestor() Object
 }
 
 // Binding is an abstruct type for binding.
@@ -164,16 +163,4 @@ func (o *ObjectBase) boundedObject(identifier string) Object {
 	}
 
 	return scopedBinding[identifier]
-}
-
-func (o *ObjectBase) ancestor() Object {
-	ancestor := o.Parent()
-	for {
-		if ancestor.Parent() == nil {
-			break
-		} else {
-			ancestor = ancestor.Parent()
-		}
-	}
-	return ancestor
 }
