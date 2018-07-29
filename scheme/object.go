@@ -14,6 +14,7 @@ type Object interface {
 	String() string
 	isNumber() bool
 	isBoolean() bool
+	isClosure() bool
 	isProcedure() bool
 	isNull() bool
 	isPair() bool
@@ -55,6 +56,10 @@ func (o *ObjectBase) isNumber() bool {
 }
 
 func (o *ObjectBase) isBoolean() bool {
+	return false
+}
+
+func (o *ObjectBase) isClosure() bool {
 	return false
 }
 

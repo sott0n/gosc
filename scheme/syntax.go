@@ -8,6 +8,7 @@ var (
 	builtinSyntaxes = Binding{
 		"set!":   NewSyntax(setSyntax),
 		"if":     NewSyntax(ifSyntax),
+		"lambda": NewSyntax(lambdaSyntax),
 		"and":    NewSyntax(andSyntax),
 		"or":     NewSyntax(orSyntax),
 		"quote":  NewSyntax(quoteSyntax),
@@ -80,7 +81,7 @@ func setSyntax(s *Syntax, arguments Object) Object {
 	}
 	value := elements[1].Eval()
 	s.Bounder().set(variable.(*Variable).identifier, value)
-	return undef
+	return value
 }
 
 func ifSyntax(s *Syntax, arguments Object) Object {
@@ -201,6 +202,50 @@ func condSyntax(s *Syntax, arguments Object) Object {
 		}
 	}
 	return undef
+}
+
+func lambdaSyntax(s *Syntax, arguments Object) Object {
+	s.assertListMinimum(arguments, 1)
+	elements := arguments.(*Pair).Elements()
+
+	// Insert closure between application and its parent
+	application := arguments.Parent()
+	closure := NewClosure(application.Parent())
+	application.setParent(closure)
+
+	// Parse argument list
+	argumentList := elements[0]
+	if argumentList.isApplication() {
+		argumentList = argumentList.(*Application).toList()
+	}
+	s.assertListMinimum(argumentList, 0)
+	variables := argumentList.(*Pair).Elements()
+
+	// generate function
+	closure.function = func(givenArguments Object) Object {
+		// assert given arguments
+		s.assertListMinimum(givenArguments, 0)
+		givenElements := givenArguments.(*Pair).Elements()
+		if len(variables) != len(givenElements) {
+			compileError("wrong number of arguments: requires %d, but got %d", len(variables), len(givenElements))
+		}
+
+		// define arguments to local scope
+		for index, variable := range variables {
+			object := givenElements[index].Eval()
+			if variable.isVariable() {
+				closure.localBinding[variable.(*Variable).identifier] = object
+			}
+		}
+
+		// returns last eval result
+		lastResult := undef
+		for _, element := range elements[1:] {
+			lastResult = element.Eval()
+		}
+		return lastResult
+	}
+	return closure
 }
 
 // Do is a struct for do statement.

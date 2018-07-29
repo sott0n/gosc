@@ -47,9 +47,6 @@ func (p *Parser) parseBlock(parent Object) Object {
 	case ")":
 		p.NextToken()
 		return Null
-	case "lambda":
-		p.NextToken()
-		return p.parseProcedure(parent)
 	case "let", "let*", "letrec":
 		p.NextToken()
 		return p.parseLet(parent)
@@ -89,20 +86,6 @@ func (p *Parser) parseApplication(parent Object) Object {
 	application.arguments = p.parseList(application)
 
 	return application
-}
-
-func (p *Parser) parseProcedure(parent Object) Object {
-	if p.TokenType() == '(' {
-		p.NextToken()
-	} else {
-		syntaxError("malformed lambda")
-	}
-
-	procedure := new(Procedure)
-	procedure.arguments = p.parseList(procedure)
-	procedure.body = p.parseList(procedure)
-	procedure.generateFunction(parent)
-	return procedure
 }
 
 func (p *Parser) parseLet(parent Object) Object {

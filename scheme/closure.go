@@ -6,10 +6,23 @@ package scheme
 type Closure struct {
 	ObjectBase
 	localBinding Binding
+	function     func(Object) Object
 }
 
 func NewClosure(parent Object) *Closure {
 	return &Closure{ObjectBase: ObjectBase{parent: parent}, localBinding: make(Binding)}
+}
+
+func (c *Closure) String() string {
+	return "#<closure #f>"
+}
+
+func (c *Closure) Invoke(argument Object) Object {
+	return c.function(argument)
+}
+
+func (c *Closure) isClosure() bool {
+	return true
 }
 
 // This method is for define syntax form.
@@ -30,18 +43,6 @@ func (c *Closure) set(identifier string, object Object) {
 	} else {
 		c.localBinding[identifier] = object
 	}
-}
-
-func (c *Closure) boundedObject(identifier string) Object {
-	boundedObject := c.localBinding[identifier]
-	if boundedObject != nil {
-		return boundedObject
-	}
-
-	if c.parent == nil {
-		runtimeError("unbound variable: %s", identifier)
-	}
-	return c.parent.boundedObject(identifier)
 }
 
 func (c *Closure) binding() Binding {
