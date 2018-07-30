@@ -9,6 +9,9 @@ var (
 		"set!":   NewSyntax(setSyntax),
 		"if":     NewSyntax(ifSyntax),
 		"lambda": NewSyntax(lambdaSyntax),
+		"let":    NewSyntax(letSyntax),
+		"let*":   NewSyntax(letSyntax),
+		"letrec": NewSyntax(letSyntax),
 		"and":    NewSyntax(andSyntax),
 		"or":     NewSyntax(orSyntax),
 		"quote":  NewSyntax(quoteSyntax),
@@ -320,4 +323,41 @@ func doSyntax(s *Syntax, arguments Object) Object {
 		}
 	}
 	return undef
+}
+
+func letSyntax(s *Syntax, arguments Object) Object {
+	s.assertListMinimum(arguments, 1)
+	elements := arguments.(*Pair).Elements()
+
+	// Insert closure between application and its parent
+	application := arguments.Parent()
+	closure := NewClosure(application.Parent())
+	application.setParent(closure)
+
+	// parse argument list
+	argumentList := elements[0]
+	if argumentList.isApplication() {
+		argumentList = argumentList.(*Application).toList()
+	}
+	s.assertListMinimum(argumentList, 0)
+	argumentElements := argumentList.(*Pair).Elements()
+
+	// define arguments to local scope
+	for _, argumentElement := range argumentElements {
+		if argumentElement.isApplication() {
+			argumentElement = argumentElement.(*Application).toList()
+		}
+		s.assertListEqual(argumentElement, 2)
+		variable := argumentElement.(*Pair).ElementAt(0)
+		if variable.isVariable() {
+			closure.localBinding[variable.(*Variable).identifier] = argumentElement.(*Pair).ElementAt(1).Eval()
+		}
+	}
+
+	// eval body
+	lastResult := undef
+	for _, element := range elements[1:] {
+		lastResult = element.Eval()
+	}
+	return lastResult
 }
